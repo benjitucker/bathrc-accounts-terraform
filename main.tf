@@ -16,7 +16,8 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-west-2"
+  // putting all bathrc accounts resources in eu-west-2 (London)
+  region = "eu-west-2"
 }
 
 resource "random_pet" "sg" {}

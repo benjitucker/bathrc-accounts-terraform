@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-  TF_CLOUD_ORGANIZATION: "YOUR-ORGANIZATION-HERE"
+  TF_CLOUD_ORGANIZATION: "bathrc-accounts"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
-  TF_WORKSPACE: "learn-terraform-github-actions"
+  TF_WORKSPACE: "bathrc-accounts"
   CONFIG_DIRECTORY: "./"
 
 jobs:
@@ -22,6 +22,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      # uploads the Terraform configuration to Terraform Cloud
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
         id: apply-upload
@@ -29,6 +30,7 @@ jobs:
           workspace: ${{ env.TF_WORKSPACE }}
           directory: ${{ env.CONFIG_DIRECTORY }}
 
+      # creates a Terraform apply run using the configuration uploaded in the previous step
       - name: Create Apply Run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.0.0
         id: apply-run
@@ -36,6 +38,7 @@ jobs:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
 
+      # confirms and applies the run
       - name: Apply
         uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.0.0
         if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable

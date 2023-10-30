@@ -4,9 +4,9 @@ on:
   pull_request:
 
 env:
-  TF_CLOUD_ORGANIZATION: "YOUR-ORGANIZATION-HERE"
+  TF_CLOUD_ORGANIZATION: "bathrc-accounts"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
-  TF_WORKSPACE: "learn-terraform-github-actions"
+  TF_WORKSPACE: "bathrc-accounts"
   CONFIG_DIRECTORY: "./"
 
 jobs:
@@ -21,6 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      # uploads the Terraform configuration to Terraform Cloud and marks it as speculative so it cannot modify infrastructure
       - name: Upload Configuration
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
         id: plan-upload
@@ -29,6 +30,7 @@ jobs:
           directory: ${{ env.CONFIG_DIRECTORY }}
           speculative: true
 
+      # creates a speculative plan run in Terraform Cloud using the configuration uploaded in the previous step
       - name: Create Plan Run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.0.0
         id: plan-run
@@ -37,12 +39,14 @@ jobs:
           configuration_version: ${{ steps.plan-upload.outputs.configuration_version_id }}
           plan_only: true
 
+      # extracts the plan output from the speculative run
       - name: Get Plan Output
         uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.0.0
         id: plan-output
         with:
           plan: ${{ fromJSON(steps.plan-run.outputs.payload).data.relationships.plan.data.id }}
 
+      # adds a comment to the pull request with a link to the run in Terraform Cloud. It also removes any previous comments added by this workflow
       - name: Update PR
         uses: actions/github-script@v6
         id: plan-comment

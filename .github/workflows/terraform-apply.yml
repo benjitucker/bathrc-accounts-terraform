@@ -12,6 +12,26 @@ env:
   CONFIG_DIRECTORY: "./"
 
 jobs:
+  tflint:
+    name: TFLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: TFLint
+        uses: pauloconnor/tflint-action@v0.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tflint_path: environments/
+          tflint_recurse: true
+          tflint_changed_only: false
+          tflint_extra_options: --output json
+          tflint_enabled_rules:
+            terraform_required_providers
+            terraform_standard_module_structure
+          tflint_disabled_rules:
+            terraform_deprecated_interpolation
   terraform:
     if: github.repository != 'hashicorp-education/learn-terraform-github-actions'
     name: "Terraform Apply"

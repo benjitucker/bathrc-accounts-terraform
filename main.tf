@@ -43,7 +43,8 @@ data "aws_ecr_authorization_token" "dest-ecr" {}
 
 provider "skopeo2" {
   destination {
-    login_username = data.aws_ecr_authorization_token.dest-ecr.user_name
-    login_password = data.aws_ecr_authorization_token.dest-ecr.password
+    login_username     = data.aws_ecr_authorization_token.dest-ecr.user_name
+    login_password     = data.aws_ecr_authorization_token.dest-ecr.password
+    registry_auth_file = "/tmp/skopeo2_auth.json"
   }
 }

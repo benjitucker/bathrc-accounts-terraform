@@ -80,7 +80,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_account_id"></a> [aws\_account\_id](#input\_aws\_account\_id) | These come from the TF cloud variables (https://app.terraform.io/app/bathrc-accounts/workspaces/bathrc-accounts/variables): | `string` | n/a | yes |
-| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | n/a | `string` | `"eu-west-2"` | no |
+| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | n/a | `string` | `"eu-west-3"` | no |
 | <a name="input_env_name"></a> [env\_name](#input\_env\_name) | n/a | `string` | `"bathrc-accounts"` | no |
 | <a name="input_mongo_cluster"></a> [mongo\_cluster](#input\_mongo\_cluster) | n/a | `string` | `"bathrc-accounts"` | no |
 | <a name="input_mongo_database"></a> [mongo\_database](#input\_mongo\_database) | n/a | `string` | `"bathrc-accounts"` | no |

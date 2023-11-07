@@ -21,6 +21,8 @@ locals {
   )
 
   mongo_peering_address_prefix = local.mongo_peering_cidr
+
+  mongo_region = replace(upper(var.aws_region), "-", "_")
 }
 
 data "mongodbatlas_project" "default" {
@@ -44,7 +46,7 @@ resource "mongodbatlas_cluster" "default" {
   provider_disk_iops          = 100
   provider_volume_type        = "STANDARD"
   provider_instance_size_name = "M10"
-  provider_region_name        = var.aws_region
+  provider_region_name        = local.mongo_region
 }
 
 resource "random_password" "mongo_application_password" {
@@ -93,7 +95,7 @@ resource "mongodbatlas_network_container" "default" {
   project_id       = local.mongo_project_id
   atlas_cidr_block = local.mongo_peering_address_prefix
   provider_name    = "AWS"
-  region_name      = var.aws_region
+  region_name      = local.mongo_region
 }
 
 resource "mongodbatlas_network_peering" "default" {

@@ -23,13 +23,12 @@ locals {
   mongo_peering_address_prefix = local.mongo_peering_cidr
 }
 
-resource "mongodbatlas_project" "default" {
-  name   = var.mongo_project
-  org_id = var.mongo_organisation
+data "mongodbatlas_project" "default" {
+  name = var.mongo_project
 }
 
 resource "mongodbatlas_cluster" "default" {
-  project_id = mongodbatlas_project.default.id
+  project_id = data.mongodbatlas_project.default.id
 
   name       = var.mongo_cluster
   num_shards = 1

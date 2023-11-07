@@ -68,12 +68,12 @@ The checks will also be performed automatically by pre-commit when attempting to
 | [mongodbatlas_database_user.application](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/database_user) | resource |
 | [mongodbatlas_network_container.default](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/network_container) | resource |
 | [mongodbatlas_network_peering.default](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/network_peering) | resource |
-| [mongodbatlas_project.default](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/project) | resource |
 | [mongodbatlas_project_ip_access_list.peering](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/project_ip_access_list) | resource |
 | [random_password.mongo_admin_password](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/password) | resource |
 | [random_password.mongo_application_password](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/password) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_ecr_authorization_token.dest-ecr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ecr_authorization_token) | data source |
+| [mongodbatlas_project.default](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/data-sources/project) | data source |
 
 ## Inputs
 
@@ -84,7 +84,6 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="input_env_name"></a> [env\_name](#input\_env\_name) | n/a | `string` | `"bathrc-accounts"` | no |
 | <a name="input_mongo_cluster"></a> [mongo\_cluster](#input\_mongo\_cluster) | n/a | `string` | `"bathrc-accounts"` | no |
 | <a name="input_mongo_database"></a> [mongo\_database](#input\_mongo\_database) | n/a | `string` | `"bathrc-accounts"` | no |
-| <a name="input_mongo_organisation"></a> [mongo\_organisation](#input\_mongo\_organisation) | n/a | `string` | n/a | yes |
 | <a name="input_mongo_private_key"></a> [mongo\_private\_key](#input\_mongo\_private\_key) | n/a | `string` | n/a | yes |
 | <a name="input_mongo_project"></a> [mongo\_project](#input\_mongo\_project) | n/a | `string` | `"bathrc-accounts"` | no |
 | <a name="input_mongo_public_key"></a> [mongo\_public\_key](#input\_mongo\_public\_key) | n/a | `string` | n/a | yes |

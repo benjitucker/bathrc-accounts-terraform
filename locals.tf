@@ -3,6 +3,5 @@ locals {
   route_table_id  = module.virtual-network.route_table_id
   virtual_network = module.virtual-network
 
-  public_subnet  = local.virtual_network.public_subnet.*
-  private_subnet = local.virtual_network.private_subnet.*
+  private_subnet = local.virtual_network.private_subnet[*]
 }

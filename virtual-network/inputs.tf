@@ -11,13 +11,13 @@ variable "cidr" {
 }
 
 variable "tags" {
-  type    = map
+  type    = map(any)
   default = {}
 }
 
 #
 # Set this if you want extra private subnets created.
-# 
+#
 #
 variable "public_cidr" {
   type = string

@@ -13,10 +13,9 @@ data "aws_availability_zones" "available" {
 
 locals {
   /* 3 or less if not available (e.g. us-west-1 is overloaded and only gives us 2 AZs to play with) */
-  az_count            = min(3, length(data.aws_availability_zones.available.names))
-  public_count        = min(local.az_count, var.public_subnet_count)
-  private_count       = min(local.az_count, var.private_subnet_count)
-  private_extra_count = min(local.az_count, var.private_extra_subnet_count)
+  az_count      = min(3, length(data.aws_availability_zones.available.names))
+  public_count  = min(local.az_count, var.public_subnet_count)
+  private_count = min(local.az_count, var.private_subnet_count)
 }
 
 # Create var.az_count private subnets, each in a different AZ
@@ -74,8 +73,8 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "nat" {
   count         = local.private_count
-  subnet_id     = element(aws_subnet.public.*.id, count.index)
-  allocation_id = element(aws_eip.nat.*.id, count.index)
+  subnet_id     = element(aws_subnet.public[*].id, count.index)
+  allocation_id = element(aws_eip.nat[*].id, count.index)
 
   tags = {
     Name = "${var.env_name}-pac-${count.index}"
@@ -99,7 +98,7 @@ resource "aws_route" "private" {
   route_table_id = aws_route_table.private[count.index].id
 
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = element(aws_nat_gateway.nat.*.id, count.index)
+  nat_gateway_id         = element(aws_nat_gateway.nat[*].id, count.index)
 }
 
 # Explicitly associate the newly created route tables to the private subnets (so they don't default to the main route table)

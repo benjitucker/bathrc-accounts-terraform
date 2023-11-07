@@ -34,7 +34,7 @@ variable "aws_account_id" {
 }
 
 variable "mongo_organisation" {
-  type    = string
+  type = string
 }
 
 variable "mongo_public_key" {
@@ -44,5 +44,3 @@ variable "mongo_public_key" {
 variable "mongo_private_key" {
   type = string
 }
-
-

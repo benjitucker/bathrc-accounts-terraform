@@ -9,4 +9,3 @@ resource "aws_vpc" "vpc" {
     Description = var.description
   })
 }
-

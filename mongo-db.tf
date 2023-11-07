@@ -8,52 +8,16 @@ locals {
   extra_uri_options = "&connectTimeoutMS=60000"
 
   # If the cluster is created by terraform (for production)
-  mongo_uri_with_minimal_options = mongodbatlas_cluster.default.mongo_uri_with_options
-  mongo_uri_with_options         = "${local.mongo_uri_with_minimal_options}${local.extra_uri_options}"
-  mongo_uri_srv                  = mongodbatlas_cluster.default.srv_address
+  mongo_uri_srv = mongodbatlas_cluster.default.srv_address
 
   mongo_project_id   = mongodbatlas_project.default.id
   mongo_container    = mongodbatlas_network_container.default
   mongo_container_id = local.mongo_container.id
 
-  # Adds admin auth details
-  mongo_admin_user_uri_less_db = replace(
-    local.mongo_uri_with_options,
-    "mongodb://",
-    "mongodb://${local.mongo_admin_username}:${local.mongo_admin_password}@"
-  )
-
-  # Adds database name
-  mongo_application_user_uri = replace(
-    local.mongo_application_user_uri_less_db,
-    "?",
-    "${var.mongo_database}?"
-  )
-
-  # Adds admin auth details
-  mongo_application_user_uri_less_db = replace(
-    local.mongo_uri_with_options,
-    "mongodb://",
-    "mongodb://${local.mongo_application_username}:${local.mongo_application_password}@"
-  )
-
-  # Adds database name
-  mongo_admin_user_uri = replace(
-    local.mongo_admin_user_uri_less_db,
-    "?",
-    "${var.mongo_database}?"
-  )
-
   mongo_application_user_uri_srv = replace(
     "${local.mongo_uri_srv}/${var.mongo_database}${local.extra_uri_options}",
     "mongodb+srv://",
     "mongodb+srv://${local.mongo_application_username}:${local.mongo_application_password}@"
-  )
-
-  mongo_admin_user_uri_srv = replace(
-    "${local.mongo_uri_srv}/${var.mongo_database}",
-    "mongodb+srv://",
-    "mongodb+srv://${local.mongo_admin_username}:${local.mongo_admin_password}@"
   )
 
   mongo_peering_address_prefix = local.mongo_peering_cidr

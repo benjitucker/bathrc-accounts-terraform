@@ -10,7 +10,7 @@ locals {
   # If the cluster is created by terraform (for production)
   mongo_uri_srv = mongodbatlas_cluster.default.srv_address
 
-  mongo_project_id   = mongodbatlas_project.default.id
+  mongo_project_id   = data.mongodbatlas_project.default.id
   mongo_container    = mongodbatlas_network_container.default
   mongo_container_id = local.mongo_container.id
 

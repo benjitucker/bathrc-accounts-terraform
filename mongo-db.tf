@@ -10,17 +10,11 @@ locals {
   # If the cluster is created by terraform (for production)
   mongo_uri_srv = mongodbatlas_cluster.default.srv_address
 
-  mongo_project_id   = data.mongodbatlas_project.default.id
-  mongo_container    = mongodbatlas_network_container.default
-  mongo_container_id = local.mongo_container.id
-
   mongo_application_user_uri_srv = replace(
     "${local.mongo_uri_srv}/${var.mongo_database}${local.extra_uri_options}",
     "mongodb+srv://",
     "mongodb+srv://${local.mongo_application_username}:${local.mongo_application_password}@"
   )
-
-  mongo_peering_address_prefix = local.mongo_peering_cidr
 
   mongo_region = replace(upper(var.aws_region), "-", "_")
 }
@@ -60,7 +54,7 @@ resource "random_password" "mongo_admin_password" {
 }
 
 resource "mongodbatlas_project_ip_access_list" "peering" {
-  project_id = local.mongo_project_id
+  project_id = data.mongodbatlas_project.default.id
   cidr_block = local.cidr
   comment    = "vpc-peering (Terraform managed)"
 }
@@ -69,7 +63,7 @@ resource "mongodbatlas_database_user" "admin" {
   username = local.mongo_admin_username
   password = local.mongo_admin_password
 
-  project_id         = local.mongo_project_id
+  project_id         = data.mongodbatlas_project.default.id
   auth_database_name = "admin"
 
   roles {
@@ -82,7 +76,7 @@ resource "mongodbatlas_database_user" "application" {
   username = local.mongo_application_username
   password = local.mongo_application_password
 
-  project_id         = local.mongo_project_id
+  project_id         = data.mongodbatlas_project.default.id
   auth_database_name = "admin"
 
   roles {
@@ -92,21 +86,20 @@ resource "mongodbatlas_database_user" "application" {
 }
 
 resource "mongodbatlas_network_container" "default" {
-  project_id       = local.mongo_project_id
-  atlas_cidr_block = local.mongo_peering_address_prefix
+  project_id       = data.mongodbatlas_project.default.id
+  atlas_cidr_block = local.mongo_peering_cidr
   provider_name    = "AWS"
   region_name      = local.mongo_region
 }
 
 resource "mongodbatlas_network_peering" "default" {
-  project_id             = local.mongo_project_id
-  container_id           = local.mongo_container_id
+  project_id             = data.mongodbatlas_project.default.id
+  container_id           = mongodbatlas_network_container.default.id
   provider_name          = "AWS"
   aws_account_id         = var.aws_account_id
   vpc_id                 = local.vpc_id
-  route_table_cidr_block = local.cidr
-
-  accepter_region_name = var.aws_region
+  route_table_cidr_block = local.private_cidr
+  accepter_region_name   = var.aws_region
 }
 
 resource "aws_vpc_peering_connection_accepter" "default" {
@@ -117,6 +110,6 @@ resource "aws_vpc_peering_connection_accepter" "default" {
 resource "aws_route" "atlas" {
   count                     = min(3, length(data.aws_availability_zones.available.names))
   route_table_id            = local.route_table_id[count.index]
-  destination_cidr_block    = local.mongo_container.atlas_cidr_block
+  destination_cidr_block    = mongodbatlas_network_peering.default.atlas_cidr_block
   vpc_peering_connection_id = mongodbatlas_network_peering.default.connection_id
 }

@@ -8,6 +8,14 @@ terraform {
       source  = "hashicorp/random"
       version = "~>3.0"
     }
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "~> 3.0"
+    }
+    skopeo2 = {
+      source  = "bsquare-corp/skopeo2"
+      version = "~> 1.0"
+    }
   }
   required_version = ">= 0.13"
 }

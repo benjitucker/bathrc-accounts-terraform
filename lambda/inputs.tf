@@ -2,7 +2,7 @@ variable "lambda_name" {
   type = string
 }
 
-variable "ecr_prefix" {
+variable "ghcr_urn" {
   type = string
 }
 
@@ -46,4 +46,12 @@ variable "tags" {
   type        = map(string)
   description = "Tags to apply to all resources that support them"
   default     = {}
+}
+
+variable "aws_region" {
+  type = string
+}
+
+variable "aws_account_id" {
+  type = string
 }

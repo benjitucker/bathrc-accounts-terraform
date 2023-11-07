@@ -5,7 +5,7 @@ locals {
   ]
 
   lambda_policy_count  = length(local.lambda_policy)
-  lambda_function_name = "${var.env_name}-${var.lambda_name}"
+  lambda_function_name = var.lambda_name
 
   default_environment = {
     ENV_NAME = var.env_name
@@ -38,18 +38,37 @@ resource "aws_iam_role_policy_attachment" "lambda_role" {
   policy_arn = local.lambda_policy[count.index]
 }
 
-data "aws_ecr_repository" "repository" {
-  name = "${var.ecr_prefix}/${var.lambda_name}"
+locals {
+  dst_ecr_urn = "${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com"
 }
 
-data "aws_ecr_image" "image" {
-  repository_name = data.aws_ecr_repository.repository.name
-  image_tag       = var.image_tag
+data "docker_registry_image" "in-ghcr" {
+  name = "${var.ghcr_urn}/${var.lambda_name}:${var.image_tag}"
+}
+
+resource "aws_ecr_repository" "compose" {
+  name = var.lambda_name
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+  force_delete = true
+}
+
+resource "skopeo2_copy" "update-local-ecr" {
+  source_image      = "docker://${var.ghcr_urn}/${var.lambda_name}:${var.image_tag}"
+  destination_image = "docker://${local.dst_ecr_urn}/${var.lambda_name}:${var.image_tag}"
+
+  preserve_digests = true
+  keep_image       = true
+  copy_all_images  = true
+  docker_digest    = data.docker_registry_image.in-ghcr.sha256_digest
+
+  depends_on = [aws_ecr_repository.compose]
 }
 
 resource "aws_lambda_function" "default" {
   package_type = "Image"
-  image_uri    = "${data.aws_ecr_repository.repository.repository_url}:${var.image_tag}"
+  image_uri    = "${local.dst_ecr_urn}/${var.lambda_name}:${var.image_tag}"
 
   function_name = local.lambda_function_name
   role          = aws_iam_role.iam_for_lambda.arn
@@ -71,7 +90,9 @@ resource "aws_lambda_function" "default" {
    * we cannot calculate when using images.
    */
   environment {
-    variables = merge(var.environment_variables, local.default_environment, { IMAGE_ID = data.aws_ecr_image.image.id })
+    variables = merge(var.environment_variables, local.default_environment, {
+      IMAGE_ID = data.docker_registry_image.in-ghcr.id
+    })
   }
 
   /* Run lambda in VPC such that all traffic is routed via the NAT */

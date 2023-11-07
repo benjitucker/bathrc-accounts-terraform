@@ -23,4 +23,5 @@ module "virtual-network" {
   public_subnet_count  = local.az_count
   private_cidr         = local.private_cidr
   private_subnet_count = local.az_count
+  tags                 = local.tags
 }

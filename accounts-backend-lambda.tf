@@ -12,4 +12,6 @@ module "compliance-lambda" {
   aws_account_id = var.aws_account_id
 
   memory_size = 256
+
+  tags = local.tags
 }

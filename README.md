@@ -61,6 +61,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 
 | Name | Type |
 |------|------|
+| [aws_route.atlas](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [mongodbatlas_cluster.default](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/cluster) | resource |
 | [mongodbatlas_database_user.admin](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/database_user) | resource |
 | [mongodbatlas_database_user.application](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/database_user) | resource |

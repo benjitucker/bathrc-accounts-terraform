@@ -107,7 +107,6 @@ resource "aws_vpc_peering_connection_accepter" "default" {
   vpc_peering_connection_id = mongodbatlas_network_peering.default.connection_id
   auto_accept               = true
 }
-*/
 
 resource "aws_route" "atlas" {
   count                     = min(3, length(data.aws_availability_zones.available.names))
@@ -115,3 +114,4 @@ resource "aws_route" "atlas" {
   destination_cidr_block    = mongodbatlas_network_peering.default.atlas_cidr_block
   vpc_peering_connection_id = mongodbatlas_network_peering.default.connection_id
 }
+*/

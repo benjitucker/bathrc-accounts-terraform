@@ -1,9 +1,9 @@
 locals {
-  cidr               = var.vpc_subnet_cidr
-  cidrs              = cidrsubnets(local.cidr, 3, 2, 3)
-  public_cidr        = local.cidrs[0]
-  private_cidr       = local.cidrs[1]
-  mongo_peering_cidr = local.cidrs[2]
+  cidr         = var.vpc_subnet_cidr
+  cidrs        = cidrsubnets(local.cidr, 3, 2, 3)
+  public_cidr  = local.cidrs[0]
+  private_cidr = local.cidrs[1]
+  /* cidr[2] unused */
 
   /* 3 or less if not available (e.g. us-west-1 is overloaded and only gives us 2 AZs to play with) */
   az_count = min(3, length(data.aws_availability_zones.available.names))

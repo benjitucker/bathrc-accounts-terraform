@@ -87,7 +87,7 @@ resource "mongodbatlas_database_user" "application" {
 
 resource "mongodbatlas_network_container" "default" {
   project_id       = data.mongodbatlas_project.default.id
-  atlas_cidr_block = local.mongo_peering_cidr
+  atlas_cidr_block = "192.168.248.0/21"
   provider_name    = "AWS"
   region_name      = local.mongo_region
 }
@@ -98,7 +98,7 @@ resource "mongodbatlas_network_peering" "default" {
   provider_name          = "AWS"
   aws_account_id         = var.aws_account_id
   vpc_id                 = local.vpc_id
-  route_table_cidr_block = local.private_cidr
+  route_table_cidr_block = local.cidr
   accepter_region_name   = var.aws_region
 }
 

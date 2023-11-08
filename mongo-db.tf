@@ -85,6 +85,7 @@ resource "mongodbatlas_database_user" "application" {
   }
 }
 
+/*
 resource "mongodbatlas_network_container" "default" {
   project_id       = data.mongodbatlas_project.default.id
   atlas_cidr_block = "192.168.248.0/21"
@@ -106,6 +107,7 @@ resource "aws_vpc_peering_connection_accepter" "default" {
   vpc_peering_connection_id = mongodbatlas_network_peering.default.connection_id
   auto_accept               = true
 }
+*/
 
 resource "aws_route" "atlas" {
   count                     = min(3, length(data.aws_availability_zones.available.names))

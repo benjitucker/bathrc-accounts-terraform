@@ -1,4 +1,5 @@
 variable "aws_region" {
+  // putting all bathrc accounts resources in eu-west-3 (Paris)
   type    = string
   default = "eu-west-3"
 }

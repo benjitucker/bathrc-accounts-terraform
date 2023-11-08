@@ -25,8 +25,7 @@ terraform {
 }
 
 provider "aws" {
-  // putting all bathrc accounts resources in eu-west-2 (London)
-  region = "eu-west-2"
+  region = var.aws_region
 }
 
 provider "mongodbatlas" {

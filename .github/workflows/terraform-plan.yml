@@ -44,7 +44,7 @@ jobs:
 
       # uploads the Terraform configuration to Terraform Cloud and marks it as speculative so it cannot modify infrastructure
       - name: Upload Configuration
-        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
+        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.1.1
         id: plan-upload
         with:
           workspace: ${{ env.TF_WORKSPACE }}
@@ -61,7 +61,7 @@ jobs:
 
       # creates a speculative plan run in Terraform Cloud using the configuration uploaded in the previous step
       - name: Create Plan Run
-        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.0.0
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.1.1
         id: plan-run
         with:
           workspace: ${{ env.TF_WORKSPACE }}
@@ -70,7 +70,7 @@ jobs:
 
       # extracts the plan output from the speculative run
       - name: Get Plan Output
-        uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.0.0
+        uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.1.1
         id: plan-output
         with:
           plan: ${{ fromJSON(steps.plan-run.outputs.payload).data.relationships.plan.data.id }}

@@ -55,12 +55,14 @@ The checks will also be performed automatically by pre-commit when attempting to
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_compliance-lambda"></a> [compliance-lambda](#module\_compliance-lambda) | ./lambda | n/a |
-| <a name="module_virtual-network"></a> [virtual-network](#module\_virtual-network) | ./virtual-network | n/a |
+| <a name="module_nat"></a> [nat](#module\_nat) | int128/nat-instance/aws | ~> 2.0 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_route.atlas](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
 | [aws_vpc_peering_connection_accepter.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_peering_connection_accepter) | resource |
 | [mongodbatlas_cluster.default](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/cluster) | resource |

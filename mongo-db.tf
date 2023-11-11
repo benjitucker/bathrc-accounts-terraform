@@ -108,7 +108,7 @@ resource "aws_vpc_peering_connection_accepter" "default" {
 }
 
 resource "aws_route" "atlas" {
-  count                     = min(3, length(data.aws_availability_zones.available.names))
+  count                     = local.az_count
   route_table_id            = local.route_table_id[count.index]
   destination_cidr_block    = mongodbatlas_network_peering.default.atlas_cidr_block
   vpc_peering_connection_id = mongodbatlas_network_peering.default.connection_id

@@ -15,7 +15,7 @@ locals {
   #private_subnet = local.virtual_network.private_subnet[*]
 
   vpc_id             = module.vpc.vpc_id
-  route_table_id     = module.vpc.private_route_table_ids[0]
+  route_table_id     = module.vpc.private_route_table_ids
   private_subnet_ids = module.vpc.private_subnets
 }
 
@@ -41,13 +41,9 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
 
-  name = "main"
-  #  cidr                 = "172.18.0.0/16"
-  cidr = var.vpc_subnet_cidr
-  #azs                  = ["us-west-2a", "us-west-2b", "us-west-2c"]
-  azs = local.azs
-  #private_subnets      = ["172.18.64.0/20", "172.18.80.0/20", "172.18.96.0/20"]
-  #public_subnets       = ["172.18.128.0/20", "172.18.144.0/20", "172.18.160.0/20"]
+  name                 = "main"
+  cidr                 = var.vpc_subnet_cidr
+  azs                  = local.azs
   private_subnets      = [local.private_cidr]
   public_subnets       = [local.public_cidr]
   enable_dns_hostnames = true

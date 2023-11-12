@@ -1,4 +1,4 @@
-module "compliance-lambda" {
+module "bathrc-accounts-backend" {
   source = "./lambda"
 
   lambda_name = "bathrc-accounts-backend"

@@ -15,7 +15,6 @@ locals {
   #private_subnet = local.virtual_network.private_subnet[*]
 
   vpc_id             = module.vpc.vpc_id
-  route_table_id     = module.vpc.private_route_table_ids
   private_subnet_ids = module.vpc.private_subnets
 }
 

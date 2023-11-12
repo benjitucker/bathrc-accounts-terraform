@@ -26,21 +26,12 @@ data "mongodbatlas_project" "default" {
 resource "mongodbatlas_cluster" "default" {
   project_id = data.mongodbatlas_project.default.id
 
-  name       = var.mongo_cluster
-  num_shards = 1
+  name = var.mongo_cluster
 
-  replication_factor           = 3
-  backup_enabled               = false
-  auto_scaling_disk_gb_enabled = true
-  mongo_db_major_version       = "7.0"
-
-  //Provider Settings "block"
-  provider_name               = "AWS"
-  disk_size_gb                = 10
-  provider_disk_iops          = 100
-  provider_volume_type        = "STANDARD"
-  provider_instance_size_name = "M10"
+  provider_name               = "TENANT"
+  backing_provider_name       = "AWS"
   provider_region_name        = local.mongo_region
+  provider_instance_size_name = "M0"
 }
 
 resource "random_password" "mongo_application_password" {
@@ -53,10 +44,10 @@ resource "random_password" "mongo_admin_password" {
   special = false
 }
 
-resource "mongodbatlas_project_ip_access_list" "peering" {
+resource "mongodbatlas_project_ip_access_list" "nat_gw" {
   project_id = data.mongodbatlas_project.default.id
-  cidr_block = local.cidr
-  comment    = "vpc-peering (Terraform managed)"
+  ip_address = aws_eip.nat.public_ip
+  comment    = "NAT Gateway (Terraform managed)"
 }
 
 resource "mongodbatlas_database_user" "admin" {
@@ -83,33 +74,4 @@ resource "mongodbatlas_database_user" "application" {
     role_name     = "atlasAdmin"
     database_name = "admin"
   }
-}
-
-resource "mongodbatlas_network_container" "default" {
-  project_id       = data.mongodbatlas_project.default.id
-  atlas_cidr_block = "192.168.248.0/21"
-  provider_name    = "AWS"
-  region_name      = local.mongo_region
-}
-
-resource "mongodbatlas_network_peering" "default" {
-  project_id             = data.mongodbatlas_project.default.id
-  container_id           = mongodbatlas_network_container.default.id
-  provider_name          = "AWS"
-  aws_account_id         = var.aws_account_id
-  vpc_id                 = local.vpc_id
-  route_table_cidr_block = local.cidr
-  accepter_region_name   = var.aws_region
-}
-
-resource "aws_vpc_peering_connection_accepter" "default" {
-  vpc_peering_connection_id = mongodbatlas_network_peering.default.connection_id
-  auto_accept               = true
-}
-
-resource "aws_route" "atlas" {
-  count                     = length(local.route_table_id)
-  route_table_id            = local.route_table_id[count.index]
-  destination_cidr_block    = mongodbatlas_network_peering.default.atlas_cidr_block
-  vpc_peering_connection_id = mongodbatlas_network_peering.default.connection_id
 }

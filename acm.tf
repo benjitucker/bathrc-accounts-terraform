@@ -1,5 +1,9 @@
 
-data "aws_route53_zone" "this" {
+resource "aws_route53domains_registered_domain" "example" {
+  domain_name = local.domain_name
+}
+
+resource "aws_route53_zone" "this" {
   name = local.domain_name
 }
 

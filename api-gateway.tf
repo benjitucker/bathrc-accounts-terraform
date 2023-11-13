@@ -24,6 +24,7 @@ module "api_gateway" {
   #domain_name_certificate_arn = "arn:aws:acm:eu-west-1:052235179155:certificate/2b3a7ed9-05e1-4f9e-952b-27744ba06da6"
   #domain_name                 = local.domain_name
   #domain_name_certificate_arn = module.acm.acm_certificate_arn
+  create_api_domain_name = false
 
   # Access logs
   #default_stage_access_log_destination_arn = "arn:aws:logs:eu-west-1:835367859851:log-group:debug-apigateway"

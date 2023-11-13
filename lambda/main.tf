@@ -100,6 +100,8 @@ resource "aws_lambda_function" "default" {
     subnet_ids         = var.subnet_ids
     security_group_ids = [aws_security_group.lambda.id]
   }
+
+  depends_on = [skopeo2_copy.update-local-ecr]
 }
 
 resource "random_pet" "lambda_alias" {

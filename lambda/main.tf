@@ -13,7 +13,7 @@ locals {
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
-  name = "${var.env_name}-lambda-role"
+  name = "${local.lambda_function_name}-lambda-role"
 
   assume_role_policy = <<EOF
 {

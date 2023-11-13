@@ -28,7 +28,7 @@ module "api_gateway" {
   integrations = {
     "POST /" = {
       #lambda_arn             = "arn:aws:lambda:eu-west-1:052235179155:function:my-function"
-      lambda_arn             = module.bathrc-accounts-backend.alias
+      lambda_arn             = module.bathrc-accounts-backend.arn
       payload_format_version = "2.0"
       timeout_milliseconds   = 12000
     }
@@ -58,7 +58,7 @@ module "api_gateway" {
 
     "$default" = {
       #lambda_arn = "arn:aws:lambda:eu-west-1:052235179155:function:my-default-function"
-      lambda_arn = module.bathrc-accounts-backend.alias
+      lambda_arn = module.bathrc-accounts-backend.arn
     }
   }
 

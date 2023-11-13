@@ -1,4 +1,4 @@
-resource "aws_route53_record" "api" {
+/*resource "aws_route53_record" "api" {
   zone_id = aws_route53_zone.this.zone_id
   name    = local.subdomain
   type    = "A"
@@ -9,3 +9,4 @@ resource "aws_route53_record" "api" {
     evaluate_target_health = false
   }
 }
+*/

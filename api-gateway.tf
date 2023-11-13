@@ -1,6 +1,6 @@
 locals {
-  domain_name = "bathrc.co.uk"
-  subdomain   = "accounts"
+  #domain_name = "bathrc.co.uk"
+  #subdomain   = "accounts"
 }
 
 module "api_gateway" {
@@ -22,8 +22,8 @@ module "api_gateway" {
   # Custom domain
   #domain_name                 = "terraform-aws-modules.modules.tf"
   #domain_name_certificate_arn = "arn:aws:acm:eu-west-1:052235179155:certificate/2b3a7ed9-05e1-4f9e-952b-27744ba06da6"
-  domain_name                 = local.domain_name
-  domain_name_certificate_arn = module.acm.acm_certificate_arn
+  #domain_name                 = local.domain_name
+  #domain_name_certificate_arn = module.acm.acm_certificate_arn
 
   # Access logs
   #default_stage_access_log_destination_arn = "arn:aws:logs:eu-west-1:835367859851:log-group:debug-apigateway"
@@ -55,6 +55,11 @@ module "api_gateway" {
       detailed_metrics_enabled = true
     }
     */
+
+    /* Note, API Gateway can be used to proxy the static website hosted in S3, meaning that the static part and rest
+     * APIs have the same origin (API GW) and no need for a custom domain
+     * See https://repost.aws/knowledge-center/api-gateway-s3-website-proxy
+     */
 
     "$default" = {
       #lambda_arn = "arn:aws:lambda:eu-west-1:052235179155:function:my-default-function"

@@ -1,4 +1,4 @@
-
+/*
 resource "aws_route53domains_registered_domain" "example" {
   domain_name = local.domain_name
 }
@@ -15,3 +15,4 @@ module "acm" {
   zone_id                   = aws_route53_zone.this.id
   subject_alternative_names = ["${local.subdomain}.${local.domain_name}"]
 }
+*/

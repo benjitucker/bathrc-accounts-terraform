@@ -40,19 +40,22 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
 
-  name                 = "main"
+  name                 = "bathrc-accounts"
   cidr                 = var.vpc_subnet_cidr
   azs                  = local.azs
   private_subnets      = [local.private_cidr]
   public_subnets       = [local.public_cidr]
   enable_dns_hostnames = true
+  tags = {
+    "Name" = "bathrc-accounts"
+  }
 }
 
 module "nat" {
   source  = "int128/nat-instance/aws"
   version = "~> 2.0"
 
-  name                        = "main"
+  name                        = "bathrc-accounts"
   vpc_id                      = module.vpc.vpc_id
   public_subnet               = module.vpc.public_subnets[0]
   private_subnets_cidr_blocks = module.vpc.private_subnets_cidr_blocks
@@ -62,6 +65,6 @@ module "nat" {
 resource "aws_eip" "nat" {
   network_interface = module.nat.eni_id
   tags = {
-    "Name" = "nat-instance-main"
+    "Name" = "bathrc-accounts"
   }
 }

@@ -40,7 +40,7 @@ data "aws_iam_policy_document" "api-gateway-access" {
       variable = "aws:SourceArn"
 
       values = [
-        "${module.api_gateway.apigatewayv2_api_execution_arn}/GET/",
+        "${module.api_gateway.apigatewayv2_api_execution_arn}/*/GET/",
       ]
     }
   }

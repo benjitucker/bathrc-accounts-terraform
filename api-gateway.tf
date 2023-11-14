@@ -94,3 +94,25 @@ resource "aws_apigatewayv2_authorizer" "authzero_authorizer" {
   }
 }
 */
+
+resource "aws_iam_role" "s3_proxy_role" {
+  name               = "${var.env_name}-s3-proxy-role"
+  path               = "/"
+  assume_role_policy = data.aws_iam_policy_document.s3_proxy_policy.json
+}
+
+data "aws_iam_policy_document" "s3_proxy_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "s3_proxy_role_api_gateway_attachment" {
+  role       = aws_iam_role.s3_proxy_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}

@@ -12,7 +12,36 @@ module "frontend_bucket" {
   control_object_ownership = true
   object_ownership         = "ObjectWriter"
 
+  attach_policy = true
+  policy        = data.aws_iam_policy_document.api-gateway-access.json
+
   versioning = {
     enabled = false
+  }
+}
+
+data "aws_iam_policy_document" "api-gateway-access" {
+  statement {
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${local.bucket_name}/*",
+    ]
+
+    condition {
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+
+      values = [
+        "${module.api_gateway.apigatewayv2_api_execution_arn}/GET/",
+      ]
+    }
   }
 }

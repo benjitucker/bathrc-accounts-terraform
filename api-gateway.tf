@@ -26,7 +26,7 @@ module "api_gateway" {
 
   # Routes and integrations
   integrations = {
-    "POST /" = {
+    "GET /hello" = {
       #lambda_arn             = "arn:aws:lambda:eu-west-1:052235179155:function:my-function"
       lambda_arn             = module.bathrc-accounts-backend.arn
       payload_format_version = "2.0"
@@ -55,6 +55,25 @@ module "api_gateway" {
      * APIs have the same origin (API GW) and no need for a custom domain
      * See https://repost.aws/knowledge-center/api-gateway-s3-website-proxy
      */
+    "GET /ui" = {
+      integration_type = "AWS"
+      /* See https://docs.aws.amazon.com/apigateway/latest/api/API_PutIntegration.html for the uri details */
+      integration_uri        = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
+      credentials_arn        = aws_iam_role.s3_proxy_role.arn
+      payload_format_version = "1.0"
+      timeout_milliseconds   = 12000
+
+      response_parameters = jsonencode([
+        {
+          status_code = 200
+          mappings = {
+            "append:header.timestamp"      = "$response.header.date",
+            "append:header.content-length" = "$response.header.content-length",
+            "append:header.content-type"   = "$response.header.content-type"
+          }
+        }
+      ])
+    }
 
     "$default" = {
       #lambda_arn = "arn:aws:lambda:eu-west-1:052235179155:function:my-default-function"
@@ -72,9 +91,7 @@ module "api_gateway" {
   #    }
   #  }
 
-  tags = {
-    Name = "bathrc-accounts"
-  }
+  tags = local.tags
 }
 
 output "api-endpoint" {

@@ -56,7 +56,8 @@ module "api_gateway" {
      * See https://repost.aws/knowledge-center/api-gateway-s3-website-proxy
      */
     "GET /ui" = {
-      integration_type = "AWS_PROXY"
+      integration_method = "GET"
+      integration_type   = "AWS"
       /* See https://docs.aws.amazon.com/apigateway/latest/api/API_PutIntegration.html for the uri details */
       integration_uri        = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
       credentials_arn        = aws_iam_role.s3_proxy_role.arn

@@ -158,7 +158,7 @@ resource "aws_api_gateway_method" "GetBuckets" {
   rest_api_id   = aws_api_gateway_rest_api.MyS3.id
   resource_id   = aws_api_gateway_rest_api.MyS3.root_resource_id
   http_method   = "GET"
-  authorization = "AWS_IAM"
+  authorization = "NONE"
 }
 
 resource "aws_api_gateway_integration" "S3Integration" {

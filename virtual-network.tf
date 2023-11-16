@@ -41,7 +41,6 @@ module "nat" {
 }
 
 resource "aws_eip" "nat" {
-  name              = "bathrc-accounts"
   network_interface = module.nat.eni_id
   tags              = local.tags
 }

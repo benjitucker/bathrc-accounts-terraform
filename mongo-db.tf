@@ -44,12 +44,6 @@ resource "random_password" "mongo_admin_password" {
   special = false
 }
 
-resource "mongodbatlas_project_ip_access_list" "nat_gw" {
-  project_id = data.mongodbatlas_project.default.id
-  ip_address = aws_eip.nat.public_ip
-  comment    = "NAT Gateway (Terraform managed)"
-}
-
 resource "mongodbatlas_database_user" "admin" {
   username = local.mongo_admin_username
   password = local.mongo_admin_password

@@ -38,9 +38,16 @@ module "nat" {
   public_subnet               = module.vpc.public_subnets[0]
   private_subnets_cidr_blocks = module.vpc.private_subnets_cidr_blocks
   private_route_table_ids     = module.vpc.private_route_table_ids
-}
 
-resource "aws_eip" "nat" {
-  network_interface = module.nat.eni_id
-  tags              = local.tags
+  user_data_write_files = [
+    {
+      path : "/mongo-whitelist.sh",
+      content : file("/mongo-whitelist.sh"),
+      permissions : "0755",
+    },
+  ]
+  user_data_runcmd = [
+    ["/mongo-whitelist.sh"],
+    ["rm", "/mongo-whitelist.sh"],
+  ]
 }

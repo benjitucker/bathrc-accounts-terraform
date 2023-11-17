@@ -57,6 +57,9 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | terraform-aws-modules/apigateway-v2/aws | ~> 2.0 |
 | <a name="module_bathrc-accounts-backend"></a> [bathrc-accounts-backend](#module\_bathrc-accounts-backend) | ./lambda | n/a |
 | <a name="module_frontend_bucket"></a> [frontend\_bucket](#module\_frontend\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0 |
+| <a name="module_mongo_admin_password_secret"></a> [mongo\_admin\_password\_secret](#module\_mongo\_admin\_password\_secret) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
+| <a name="module_mongo_admin_username_secret"></a> [mongo\_admin\_username\_secret](#module\_mongo\_admin\_username\_secret) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
+| <a name="module_mongo_project_id_param"></a> [mongo\_project\_id\_param](#module\_mongo\_project\_id\_param) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
 | <a name="module_nat"></a> [nat](#module\_nat) | int128/nat-instance/aws | ~> 2.0 |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
@@ -80,7 +83,6 @@ The checks will also be performed automatically by pre-commit when attempting to
 | [aws_api_gateway_resource.resource](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_resource) | resource |
 | [aws_api_gateway_rest_api.MyS3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_rest_api) | resource |
 | [aws_api_gateway_stage.S3APIStage](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_stage) | resource |
-| [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_iam_role.s3_proxy_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.s3_proxy_role_api_gateway_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [mongodbatlas_cluster.default](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/cluster) | resource |

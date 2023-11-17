@@ -2,6 +2,10 @@ output "arn" {
   value = aws_lambda_function.default.arn
 }
 
+output "invoke_arn" {
+  value = aws_lambda_function.default.invoke_arn
+}
+
 output "role_arn" {
   value = aws_iam_role.iam_for_lambda.arn
 }

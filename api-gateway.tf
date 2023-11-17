@@ -251,8 +251,18 @@ resource "aws_api_gateway_integration_response" "IntegrationResponse500" {
 }
 
 resource "aws_api_gateway_deployment" "S3APIDeployment" {
-  depends_on  = [aws_api_gateway_integration.S3Integration, aws_api_gateway_method.GetBuckets]
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
+
+  redeployment = sha1(jsonencode([
+    aws_api_gateway_resource.Folder.id,
+    aws_api_gateway_resource.Item.id,
+    aws_api_gateway_method.GetBuckets.id,
+    aws_api_gateway_integration.S3Integration.id,
+  ]))
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_api_gateway_stage" "S3APIStage" {

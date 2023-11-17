@@ -42,7 +42,7 @@ module "nat" {
   user_data_write_files = [
     {
       path : "/mongo-whitelist.sh",
-      content : file("/mongo-whitelist.sh"),
+      content : file("mongo-whitelist.sh"),
       permissions : "0755",
     },
   ]

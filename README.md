@@ -57,9 +57,8 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | terraform-aws-modules/apigateway-v2/aws | ~> 2.0 |
 | <a name="module_bathrc-accounts-backend"></a> [bathrc-accounts-backend](#module\_bathrc-accounts-backend) | ./lambda | n/a |
 | <a name="module_frontend_bucket"></a> [frontend\_bucket](#module\_frontend\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0 |
-| <a name="module_mongo_admin_password_secret"></a> [mongo\_admin\_password\_secret](#module\_mongo\_admin\_password\_secret) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
-| <a name="module_mongo_admin_username_secret"></a> [mongo\_admin\_username\_secret](#module\_mongo\_admin\_username\_secret) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
-| <a name="module_mongo_project_id_param"></a> [mongo\_project\_id\_param](#module\_mongo\_project\_id\_param) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
+| <a name="module_mongo_private_key_secret"></a> [mongo\_private\_key\_secret](#module\_mongo\_private\_key\_secret) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
+| <a name="module_mongo_public_key_secret"></a> [mongo\_public\_key\_secret](#module\_mongo\_public\_key\_secret) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
 | <a name="module_nat"></a> [nat](#module\_nat) | int128/nat-instance/aws | ~> 2.0 |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
@@ -90,6 +89,8 @@ The checks will also be performed automatically by pre-commit when attempting to
 | [mongodbatlas_database_user.application](https://registry.terraform.io/providers/mongodb/mongodbatlas/latest/docs/resources/database_user) | resource |
 | [random_password.mongo_admin_password](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/password) | resource |
 | [random_password.mongo_application_password](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/password) | resource |
+| [random_password.mongo_private_key_ssm_param_name](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/password) | resource |
+| [random_password.mongo_public_key_ssm_param_name](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/password) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_ecr_authorization_token.dest-ecr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ecr_authorization_token) | data source |
 | [aws_iam_policy_document.api-gateway-access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |

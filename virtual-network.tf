@@ -29,6 +29,26 @@ module "vpc" {
   tags                 = local.tags
 }
 
+locals {
+  whitelist_script_template_vars = {
+    SERVICE_NAME                  = "bathrc-accounts"
+    MONGODB_ATLAS_PUBLIC_API_KEY  = random_password.mongo_public_key_ssm_param_name.result
+    MONGODB_ATLAS_PRIVATE_API_KEY = random_password.mongo_private_key_ssm_param_name.result
+    MONGODB_ATLAS_ORG_ID          = data.mongodbatlas_project.default.org_id
+    MONGODB_ATLAS_PROJECT_ID      = data.mongodbatlas_project.default.project_id
+  }
+}
+
+resource "random_password" "mongo_public_key_ssm_param_name" {
+  length  = 16
+  special = false
+}
+
+resource "random_password" "mongo_private_key_ssm_param_name" {
+  length  = 16
+  special = false
+}
+
 module "nat" {
   source  = "int128/nat-instance/aws"
   version = "~> 2.0"
@@ -42,7 +62,12 @@ module "nat" {
   user_data_write_files = [
     {
       path : "/mongo-whitelist.sh",
-      content : file("mongo-whitelist.sh"),
+      content : templatefile("mongo-whitelist.sh", local.whitelist_script_template_vars),
+      permissions : "0755",
+    },
+    {
+      path : "/etc/yum.repos.d/mongodb-org-6.0.repo",
+      content : file("mongodb-org-6.0.repo"),
       permissions : "0755",
     },
   ]

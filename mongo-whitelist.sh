@@ -9,16 +9,15 @@
 
 set -e
 
-mongo_api_base_url='https://cloud.mongodb.com/api/atlas/v1.0'
-
 check_for_deps() {
   deps=(
+    atlas
     bash
     curl
     jq
   )
 
- for dep in "${deps[@]}"; do
+ for dep in "$${deps[@]}"; do
    if [ ! "$(command -v $dep)" ]
    then
     echo "dependency [$dep] not found. exiting"
@@ -27,33 +26,12 @@ check_for_deps() {
  done
 }
 
-make_mongo_api_request() {
-  local request_method="$1"
-  local request_url="$2"
-  local data="$3"
-
-  curl \
-    --silent \
-    --user "$MONGO_ATLAS_API_PK:$MONGO_ATLAS_API_SK" --digest \
-    --header "Accept: application/json" \
-    --header "Content-Type: application/json" \
-    --request "$request_method" "$request_url" \
-    --data "$data"
-}
-
-get_access_list_endpoint() {
-  echo -n "$mongo_api_base_url/groups/$MONGO_ATLAS_API_PROJECT_ID/accessList"
-}
-
 get_service_ip() {
-#  echo -n "$(curl https://ipinfo.io/ip -s)"
   curl -s http://169.254.169.254/latest/meta-data/public-ipv4
 }
 
 get_previous_service_ip() {
-  local access_list_endpoint=$(get_access_list_endpoint)
-
-  local previous_ip=$(make_mongo_api_request 'GET' "$access_list_endpoint" \
+  local previous_ip=$(atlas accessLists list -o json \
                       | jq --arg SERVICE_NAME "$SERVICE_NAME" -r \
                         '.results[]? as $results | $results.comment | if test("\\[\($SERVICE_NAME)\\]") then $results.ipAddress else empty end'
                     )
@@ -65,37 +43,16 @@ whitelist_service_ip() {
   local current_service_ip="$1"
   local comment="Hosted IP of [$SERVICE_NAME] [set@$(date +%s)]"
 
-  if (( "${#comment}" > 80 )); then
+  if (( "$${#comment}" > 80 )); then
     echo "comment field value will be above 80 char limit: \"$comment\""
-    echo "comment would be too long due to length of service name [$SERVICE_NAME] [${#SERVICE_NAME}]"
+    echo "comment would be too long due to length of service name [$SERVICE_NAME] [$${#SERVICE_NAME}]"
     echo "change comment format or service name then retry. exiting to avoid mongo API failure"
     exit 1
   fi
 
   echo "whitelisting service IP [$current_service_ip] with comment value: \"$comment\""
 
-  response=$(make_mongo_api_request \
-              'POST' \
-              "$(get_access_list_endpoint)?pretty=true" \
-              "[
-                {
-                  \"comment\" : \"$comment\",
-                  \"ipAddress\": \"$current_service_ip\"
-                }
-              ]" \
-              | jq -r 'if .error then . else empty end'
-            )
-
-  if [[ -n "$response" ]];
-  then
-    echo 'API error whitelisting service'
-    echo "$response"
-    exit 1
-  else
-    echo "whitelist request successful"
-    echo "waiting 60s for whitelist to propagate to cluster"
-    sleep 60
-  fi
+  atlas accessLists create --currentIp --comment "$comment"
 }
 
 delete_previous_service_ip() {
@@ -103,9 +60,7 @@ delete_previous_service_ip() {
 
   echo "deleting previous service IP address of [$SERVICE_NAME]"
 
-  make_mongo_api_request \
-    'DELETE' \
-    "$(get_access_list_endpoint)/$previous_service_ip"
+  atlas accessLists delete "$previous_service_ip"
 }
 
 set_mongo_whitelist_for_service_ip() {
@@ -126,15 +81,22 @@ set_mongo_whitelist_for_service_ip() {
   fi
 }
 
-yum install -y jq
+get_ssm_parameter() {
+  local param_name="$1"
+  aws --region="$EC2_REGION" ssm get-parameter --name $param_name | jq -r '.Parameter.Value'
+}
+
+yum install -y jq mongodb-atlas-cli
 
 EC2_AVAIL_ZONE=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone`
 EC2_REGION="`echo \"$EC2_AVAIL_ZONE\" | sed 's/[a-z]$//'`"
 
-export SERVICE_NAME="bathrc-accounts"
-export MONGO_ATLAS_API_PK=$(aws --region="$EC2_REGION" ssm get-parameter --name 'MONGO_ATLAS_API_PK' --query 'Value')
-export MONGO_ATLAS_API_SK=$(aws --region="$EC2_REGION" ssm get-parameter --name 'MONGO_ATLAS_API_SK' --query 'Value')
-export MONGO_ATLAS_API_PROJECT_ID=$(aws --region="$EC2_REGION" ssm get-parameter --name 'MONGO_ATLAS_API_PROJECT_ID' --query 'Value')
+export SERVICE_NAME=${SERVICE_NAME}
+
+export MONGODB_ATLAS_PUBLIC_API_KEY=$(get_ssm_parameter "${MONGODB_ATLAS_PUBLIC_API_KEY}")
+export MONGODB_ATLAS_PRIVATE_API_KEY=$(get_ssm_parameter "${MONGODB_ATLAS_PRIVATE_API_KEY}")
+export MONGODB_ATLAS_ORG_ID=${MONGODB_ATLAS_ORG_ID}
+export MONGODB_ATLAS_PROJECT_ID=${MONGODB_ATLAS_PROJECT_ID}
 
 check_for_deps
 set_mongo_whitelist_for_service_ip

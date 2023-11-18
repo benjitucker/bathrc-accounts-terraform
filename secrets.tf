@@ -1,25 +1,17 @@
-module "mongo_admin_username_secret" {
+module "mongo_public_key_secret" {
   source  = "terraform-aws-modules/ssm-parameter/aws"
   version = "~> 1.0"
 
-  name        = "MONGO_ATLAS_API_PK"
-  value       = local.mongo_admin_username
+  name        = random_password.mongo_public_key_ssm_param_name.result
+  value       = var.mongo_public_key
   secure_type = true
 }
 
-module "mongo_admin_password_secret" {
+module "mongo_private_key_secret" {
   source  = "terraform-aws-modules/ssm-parameter/aws"
   version = "~> 1.0"
 
-  name        = "MONGO_ATLAS_API_SK"
-  value       = local.mongo_admin_password
+  name        = random_password.mongo_private_key_ssm_param_name.result
+  value       = var.mongo_private_key
   secure_type = true
-}
-
-module "mongo_project_id_param" {
-  source  = "terraform-aws-modules/ssm-parameter/aws"
-  version = "~> 1.0"
-
-  name  = "MONGO_ATLAS_API_PROJECT_ID"
-  value = data.mongodbatlas_project.default.project_id
 }

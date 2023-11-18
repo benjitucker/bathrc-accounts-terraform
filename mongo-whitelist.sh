@@ -52,7 +52,7 @@ whitelist_service_ip() {
 
   echo "whitelisting service IP [$current_service_ip] with comment value: \"$comment\""
 
-  atlas accessLists create --currentIp --comment "$comment"
+  atlas accessLists create --comment "$comment" "$current_service_ip"
 }
 
 delete_previous_service_ip() {
@@ -83,7 +83,7 @@ set_mongo_whitelist_for_service_ip() {
 
 get_ssm_parameter() {
   local param_name="$1"
-  aws --region="$EC2_REGION" ssm get-parameter --name $param_name | jq -r '.Parameter.Value'
+  aws --region="$EC2_REGION" ssm get-parameter --with-decryption --name $param_name | jq -r '.Parameter.Value'
 }
 
 yum install -y jq mongodb-atlas-cli

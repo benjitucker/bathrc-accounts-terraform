@@ -72,6 +72,7 @@ module "nat" {
     },
   ]
   user_data_runcmd = [
+    ["yum", "install", "-y", "jq", "mongodb-atlas-cli"],
     ["/mongo-whitelist.sh"],
     ["rm", "/mongo-whitelist.sh"],
   ]

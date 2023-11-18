@@ -1,11 +1,4 @@
-#!/usr/bin/env bash
-
-# -- ENV -- #
-# SERVICE_NAME
-# MONGO_ATLAS_API_PK
-# MONGO_ATLAS_API_SK
-# MONGO_ATLAS_API_PROJECT_ID
-# -- ENV -- #
+#!/bin/bash -x
 
 set -e
 

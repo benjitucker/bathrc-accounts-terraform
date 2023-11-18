@@ -62,12 +62,12 @@ module "nat" {
   user_data_write_files = [
     {
       path : "/mongo-whitelist.sh",
-      content : templatefile("mongo-whitelist.sh", local.whitelist_script_template_vars),
+      content : templatefile("${path.module}/mongo-whitelist.sh", local.whitelist_script_template_vars),
       permissions : "0755",
     },
     {
       path : "/etc/yum.repos.d/mongodb-org-6.0.repo",
-      content : file("mongodb-org-6.0.repo"),
+      content : file("${path.module}/mongodb-org-6.0.repo"),
       permissions : "0755",
     },
   ]

@@ -74,5 +74,6 @@ module "nat" {
     ["yum", "install", "-y", "jq", "mongodb-atlas-cli"],
     ["/mongo-whitelist.sh"],
     ["rm", "/mongo-whitelist.sh"],
+    # TODO   ["rm", "/var/log/cloud-init-output.log"],
   ]
 }

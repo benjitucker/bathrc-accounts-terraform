@@ -254,23 +254,23 @@ resource "aws_api_gateway_integration_response" "IntegrationResponse500" {
 
 # Lambda Integration:
 
-resource "aws_api_gateway_resource" "resource" {
+resource "aws_api_gateway_resource" "backend-lambda" {
   path_part   = "lambda"
   parent_id   = aws_api_gateway_rest_api.MyS3.root_resource_id
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
 }
 
-resource "aws_api_gateway_method" "method" {
+resource "aws_api_gateway_method" "backend-lambda-get" {
   rest_api_id   = aws_api_gateway_rest_api.MyS3.id
-  resource_id   = aws_api_gateway_resource.resource.id
+  resource_id   = aws_api_gateway_resource.backend-lambda.id
   http_method   = "GET"
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "integration" {
+resource "aws_api_gateway_integration" "backend-lambda" {
   rest_api_id             = aws_api_gateway_rest_api.MyS3.id
-  resource_id             = aws_api_gateway_resource.resource.id
-  http_method             = aws_api_gateway_method.method.http_method
+  resource_id             = aws_api_gateway_resource.backend-lambda.id
+  http_method             = aws_api_gateway_method.backend-lambda-get.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = module.bathrc-accounts-backend.invoke_arn
@@ -288,6 +288,9 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
       aws_api_gateway_resource.Item.id,
       aws_api_gateway_method.GetBuckets.id,
       aws_api_gateway_integration.S3Integration.id,
+      aws_api_gateway_resource.backend-lambda.id,
+      aws_api_gateway_method.backend-lambda-get.id,
+      aws_api_gateway_integration.backend-lambda.id,
     ]))
   }
 

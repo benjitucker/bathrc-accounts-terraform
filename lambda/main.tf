@@ -62,6 +62,7 @@ resource "skopeo2_copy" "update-local-ecr" {
   keep_image       = true
   copy_all_images  = true
   docker_digest    = data.docker_registry_image.in-ghcr.sha256_digest
+  additional_tags  = [data.docker_registry_image.in-ghcr.sha256_digest]
 
   depends_on = [aws_ecr_repository.compose]
 }

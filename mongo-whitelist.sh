@@ -82,6 +82,8 @@ get_ssm_parameter() {
 # Set root password, TODO remove
 echo broot | passwd --stdin root
 
+check_for_deps
+
 EC2_AVAIL_ZONE=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone`
 EC2_REGION="`echo \"$EC2_AVAIL_ZONE\" | sed 's/[a-z]$//'`"
 
@@ -92,5 +94,4 @@ export MONGODB_ATLAS_PRIVATE_API_KEY=$(get_ssm_parameter "${MONGODB_ATLAS_PRIVAT
 export MONGODB_ATLAS_ORG_ID=${MONGODB_ATLAS_ORG_ID}
 export MONGODB_ATLAS_PROJECT_ID=${MONGODB_ATLAS_PROJECT_ID}
 
-check_for_deps
 set_mongo_whitelist_for_service_ip

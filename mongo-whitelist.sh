@@ -57,7 +57,7 @@ delete_previous_service_ip() {
 
   echo "deleting previous service IP address of [$SERVICE_NAME]"
 
-  atlas accessLists delete "$previous_service_ip"
+  atlas accessLists delete --force "$previous_service_ip"
 }
 
 set_mongo_whitelist_for_service_ip() {

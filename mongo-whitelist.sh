@@ -27,12 +27,8 @@ get_service_region() {
   ec2-metadata --availability-zone | sed 's/placement: \(.*\).$/\1/'
 }
 
-atlas_access() {
-  MONGODB_ATLAS_PUBLIC_API_KEY=$MONGODB_ATLAS_PUBLIC_API_KEY MONGODB_ATLAS_PRIVATE_API_KEY=$MONGODB_ATLAS_PRIVATE_API_KEY MONGODB_ATLAS_ORG_ID=$MONGODB_ATLAS_ORG_ID MONGODB_ATLAS_PROJECT_ID=$MONGODB_ATLAS_PROJECT_ID atlas "$@"
-}
-
 get_previous_service_ip() {
-  local previous_ip=$(atlas_access accessLists list -o json \
+  local previous_ip=$(atlas accessLists list -o json \
                       | jq --arg SERVICE_NAME "$SERVICE_NAME" -r \
                         '.results[]? as $results | $results.comment | if test("\\[\($SERVICE_NAME)\\]") then $results.ipAddress else empty end'
                     )
@@ -53,7 +49,7 @@ whitelist_service_ip() {
 
   echo "whitelisting service IP [$current_service_ip] with comment value: \"$comment\""
 
-  atlas_access accessLists create --comment "$comment" "$current_service_ip"
+  atlas accessLists create --comment "$comment" "$current_service_ip"
 }
 
 delete_previous_service_ip() {
@@ -61,7 +57,7 @@ delete_previous_service_ip() {
 
   echo "deleting previous service IP address of [$SERVICE_NAME]"
 
-  atlas_access accessLists delete "$previous_service_ip"
+  atlas accessLists delete "$previous_service_ip"
 }
 
 set_mongo_whitelist_for_service_ip() {
@@ -89,6 +85,9 @@ get_ssm_parameter() {
 
 # Set root password, TODO remove
 echo broot | passwd --stdin root
+
+# userdata script does not set the HOME env var. They run as the root user
+export HOME=/root
 
 check_for_deps
 

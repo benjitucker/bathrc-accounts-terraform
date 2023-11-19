@@ -69,7 +69,7 @@ resource "skopeo2_copy" "update-local-ecr" {
 
 resource "aws_lambda_function" "default" {
   package_type = "Image"
-  image_uri    = "${local.dst_ecr_urn}/${var.lambda_name}:${data.docker_registry_image.in-ghcr.sha256_digest}"
+  image_uri    = "${local.dst_ecr_urn}/${var.lambda_name}:${var.image_tag}"
 
   function_name = local.lambda_function_name
   role          = aws_iam_role.iam_for_lambda.arn

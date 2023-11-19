@@ -5,9 +5,8 @@ set -e
 check_for_deps() {
   deps=(
     atlas
-    bash
-    curl
     jq
+    ec2-metadata
   )
 
  for dep in "$${deps[@]}"; do
@@ -20,7 +19,12 @@ check_for_deps() {
 }
 
 get_service_ip() {
-  curl -s http://169.254.169.254/latest/meta-data/public-ipv4
+  ec2-metadata --public-ipv4 | sed 's/public-ipv4: \(.*\)$/\1/'
+}
+
+get_service_region() {
+  # removes the last zone id character
+  ec2-metadata --availability-zone | sed 's/placement: \(.*\).$/\1/'
 }
 
 get_previous_service_ip() {
@@ -84,7 +88,7 @@ echo broot | passwd --stdin root
 
 check_for_deps
 
-EC2_REGION=$(/opt/aws/bin/ec2-metadata -z  | sed 's/placement: \(.*\).$/\1/')
+EC2_REGION=$(get_service_region)
 
 export SERVICE_NAME=${SERVICE_NAME}
 

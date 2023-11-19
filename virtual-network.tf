@@ -50,8 +50,7 @@ resource "random_password" "mongo_private_key_ssm_param_name" {
 }
 
 module "nat" {
-  source  = "int128/nat-instance/aws"
-  version = "~> 2.0"
+  source = "./nat"
 
   name                        = "bathrc-accounts"
   vpc_id                      = module.vpc.vpc_id

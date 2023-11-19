@@ -59,7 +59,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="module_frontend_bucket"></a> [frontend\_bucket](#module\_frontend\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0 |
 | <a name="module_mongo_private_key_secret"></a> [mongo\_private\_key\_secret](#module\_mongo\_private\_key\_secret) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
 | <a name="module_mongo_public_key_secret"></a> [mongo\_public\_key\_secret](#module\_mongo\_public\_key\_secret) | terraform-aws-modules/ssm-parameter/aws | ~> 1.0 |
-| <a name="module_nat"></a> [nat](#module\_nat) | int128/nat-instance/aws | ~> 2.0 |
+| <a name="module_nat"></a> [nat](#module\_nat) | ./nat | n/a |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
 ## Resources

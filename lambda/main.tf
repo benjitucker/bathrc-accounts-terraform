@@ -54,22 +54,27 @@ resource "aws_ecr_repository" "compose" {
   force_delete = true
 }
 
+locals {
+  sha_id         = substr(split(":", data.docker_registry_image.in-ghcr.sha256_digest)[1], 0, 8)
+  dest_image_tag = "${var.image_tag}-${local.sha_id}"
+}
+
 resource "skopeo2_copy" "update-local-ecr" {
   source_image      = "docker://${var.ghcr_urn}/${var.lambda_name}:${var.image_tag}"
-  destination_image = "docker://${local.dst_ecr_urn}/${var.lambda_name}:${var.image_tag}"
+  destination_image = "docker://${local.dst_ecr_urn}/${var.lambda_name}:${local.dest_image_tag}"
 
   preserve_digests = true
   keep_image       = true
   copy_all_images  = true
   docker_digest    = data.docker_registry_image.in-ghcr.sha256_digest
-  additional_tags  = [data.docker_registry_image.in-ghcr.sha256_digest]
+  additional_tags  = [local.dest_image_tag]
 
   depends_on = [aws_ecr_repository.compose]
 }
 
 resource "aws_lambda_function" "default" {
   package_type = "Image"
-  image_uri    = "${local.dst_ecr_urn}/${var.lambda_name}:${var.image_tag}"
+  image_uri    = "${local.dst_ecr_urn}/${var.lambda_name}:${local.dest_image_tag}"
 
   function_name = local.lambda_function_name
   role          = aws_iam_role.iam_for_lambda.arn

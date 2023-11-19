@@ -27,6 +27,11 @@ get_service_region() {
   ec2-metadata --availability-zone | sed 's/placement: \(.*\).$/\1/'
 }
 
+get_service_az() {
+  # removes the last zone id character
+  ec2-metadata --availability-zone | sed 's/placement: \(.*\)$/\1/'
+}
+
 get_previous_service_ip() {
   local previous_ip=$(atlas accessLists list -o json \
                       | jq --arg SERVICE_NAME "$SERVICE_NAME" -r \
@@ -93,7 +98,7 @@ check_for_deps
 
 EC2_REGION=$(get_service_region)
 
-export SERVICE_NAME=${SERVICE_NAME}
+export SERVICE_NAME=${SERVICE_NAME}-$(get_service_az)
 
 export MONGODB_ATLAS_PUBLIC_API_KEY=$(get_ssm_parameter "${MONGODB_ATLAS_PUBLIC_API_KEY}")
 export MONGODB_ATLAS_PRIVATE_API_KEY=$(get_ssm_parameter "${MONGODB_ATLAS_PRIVATE_API_KEY}")

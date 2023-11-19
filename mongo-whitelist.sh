@@ -84,8 +84,7 @@ echo broot | passwd --stdin root
 
 check_for_deps
 
-EC2_AVAIL_ZONE=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone`
-EC2_REGION="`echo \"$EC2_AVAIL_ZONE\" | sed 's/[a-z]$//'`"
+EC2_REGION=$(/opt/aws/bin/ec2-metadata -z  | sed 's/placement: \(.*\).$/\1/')
 
 export SERVICE_NAME=${SERVICE_NAME}
 

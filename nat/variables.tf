@@ -24,11 +24,11 @@ variable "private_subnets_cidr_blocks" {
   type        = list(string)
 }
 
-variable "private_route_table_ids" {
-  description = "List of ID of the route tables for the private subnets. You can set this to assign the each default route to the NAT instance"
-  type        = list(string)
-  default     = []
-}
+#variable "private_route_table_ids" {
+#  description = "List of ID of the route tables for the private subnets. You can set this to assign the each default route to the NAT instance"
+#  type        = list(string)
+#  default     = []
+#}
 
 variable "image_id" {
   description = "AMI of the NAT instance. Default to the latest Amazon Linux 2"

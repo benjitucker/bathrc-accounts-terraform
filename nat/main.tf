@@ -23,6 +23,7 @@ resource "aws_security_group_rule" "ingress_any" {
   protocol          = "all"
 }
 
+/*
 resource "aws_network_interface" "this" {
   security_groups   = [aws_security_group.this.id]
   subnet_id         = var.public_subnet
@@ -37,6 +38,7 @@ resource "aws_route" "this" {
   destination_cidr_block = "0.0.0.0/0"
   network_interface_id   = aws_network_interface.this.id
 }
+*/
 
 # AMI of the latest Amazon Linux 2
 data "aws_ami" "this" {
@@ -96,7 +98,8 @@ resource "aws_launch_template" "this" {
       write_files : concat([
         {
           path : "/opt/nat/runonce.sh",
-          content : templatefile("${path.module}/runonce.sh", { eni_id = aws_network_interface.this.id }),
+          #          content : templatefile("${path.module}/runonce.sh", { eni_id = aws_network_interface.this.id }),
+          content : file("${path.module}/runonce.sh"),
           permissions : "0755",
         },
         {

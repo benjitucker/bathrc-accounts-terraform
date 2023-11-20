@@ -12,6 +12,7 @@ resource "aws_instance" "private_instance" {
 
   user_data = <<EOF
 #!/bin/bash
+echo broot | passwd --stdin root
 yum install -y httpd
 systemctl start httpd
 EOF

@@ -64,13 +64,6 @@ module "nat" {
       content : templatefile("${path.module}/mongo-whitelist.sh", local.whitelist_script_template_vars),
       permissions : "0755",
     },
-    /*
-    {
-      path : "/disable-srcdst-check.sh",
-      content : file("${path.module}/disable-src-dst-check.sh"),
-      permissions : "0755",
-    },
-    */
     {
       path : "/etc/yum.repos.d/mongodb-org-6.0.repo",
       content : file("${path.module}/mongodb-org-6.0.repo"),
@@ -79,7 +72,6 @@ module "nat" {
   ]
   user_data_runcmd = [
     ["yum", "install", "-y", "jq", "mongodb-atlas-cli"],
-    //    ["/disable-srcdst-check.sh"],
     ["/mongo-whitelist.sh"],
     ["rm", "/mongo-whitelist.sh"],
     # TODO   ["rm", "/var/log/cloud-init-output.log"],

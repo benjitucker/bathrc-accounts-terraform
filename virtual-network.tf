@@ -50,13 +50,14 @@ resource "random_password" "mongo_private_key_ssm_param_name" {
 }
 
 module "nat" {
-  source = "./nat"
+  source  = "int128/nat-instance/aws"
+  version = "~> 2.0"
 
   name                        = "bathrc-accounts"
   vpc_id                      = module.vpc.vpc_id
   public_subnet               = module.vpc.public_subnets[0]
   private_subnets_cidr_blocks = module.vpc.private_subnets_cidr_blocks
-  #  private_route_table_ids     = module.vpc.private_route_table_ids
+  private_route_table_ids     = module.vpc.private_route_table_ids
 
   user_data_write_files = [
     {
@@ -64,6 +65,13 @@ module "nat" {
       content : templatefile("${path.module}/mongo-whitelist.sh", local.whitelist_script_template_vars),
       permissions : "0755",
     },
+    /*
+    {
+      path : "/disable-srcdst-check.sh",
+      content : file("${path.module}/disable-src-dst-check.sh"),
+      permissions : "0755",
+    },
+    */
     {
       path : "/etc/yum.repos.d/mongodb-org-6.0.repo",
       content : file("${path.module}/mongodb-org-6.0.repo"),
@@ -72,8 +80,14 @@ module "nat" {
   ]
   user_data_runcmd = [
     ["yum", "install", "-y", "jq", "mongodb-atlas-cli"],
+    //    ["/disable-srcdst-check.sh"],
     ["/mongo-whitelist.sh"],
     ["rm", "/mongo-whitelist.sh"],
     # TODO   ["rm", "/var/log/cloud-init-output.log"],
   ]
+}
+
+resource "aws_eip" "nat" {
+  network_interface = module.nat.eni_id
+  tags              = local.tags
 }

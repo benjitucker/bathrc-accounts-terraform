@@ -32,8 +32,16 @@ get_service_az() {
   ec2-metadata --availability-zone | sed 's/placement: \(.*\)$/\1/'
 }
 
+retry_atlas() {
+  counter=1
+  while [[ $counter -le 3 ]] ; do
+    atlas "$*" && break
+    ((counter++))
+  done
+}
+
 get_previous_service_ip() {
-  local previous_ip=$(atlas accessLists list -o json \
+  local previous_ip=$(retry_atlas accessLists list -o json \
                       | jq --arg SERVICE_NAME "$SERVICE_NAME" -r \
                         '.results[]? as $results | $results.comment | if test("\\[\($SERVICE_NAME)\\]") then $results.ipAddress else empty end'
                     )
@@ -54,7 +62,7 @@ whitelist_service_ip() {
 
   echo "whitelisting service IP [$current_service_ip] with comment value: \"$comment\""
 
-  atlas accessLists create --comment "$comment" "$current_service_ip"
+  retry_atlas accessLists create --comment "$comment" "$current_service_ip"
 }
 
 delete_previous_service_ip() {
@@ -62,7 +70,7 @@ delete_previous_service_ip() {
 
   echo "deleting previous service IP address of [$SERVICE_NAME]"
 
-  atlas accessLists delete --force "$previous_service_ip"
+  retry_atlas accessLists delete --force "$previous_service_ip"
 }
 
 set_mongo_whitelist_for_service_ip() {

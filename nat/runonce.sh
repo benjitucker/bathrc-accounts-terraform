@@ -1,5 +1,8 @@
 #!/bin/bash -x
 
+# Set root password, TODO remove
+echo broot | passwd --stdin root
+
 # attach the ENI
 aws ec2 attach-network-interface \
   --region "$(/opt/aws/bin/ec2-metadata -z  | sed 's/placement: \(.*\).$/\1/')" \

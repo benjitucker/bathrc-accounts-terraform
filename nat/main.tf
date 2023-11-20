@@ -23,7 +23,6 @@ resource "aws_security_group_rule" "ingress_any" {
   protocol          = "all"
 }
 
-/*
 resource "aws_network_interface" "this" {
   security_groups   = [aws_security_group.this.id]
   subnet_id         = var.public_subnet
@@ -38,7 +37,6 @@ resource "aws_route" "this" {
   destination_cidr_block = "0.0.0.0/0"
   network_interface_id   = aws_network_interface.this.id
 }
-*/
 
 # AMI of the latest Amazon Linux 2
 data "aws_ami" "this" {
@@ -204,7 +202,8 @@ resource "aws_iam_role_policy" "eni" {
         {
             "Effect": "Allow",
             "Action": [
-                "ec2:AttachNetworkInterface"
+                "ec2:AttachNetworkInterface",
+                "ec2:ModifyInstanceAttribute"
             ],
             "Resource": "*"
         }

@@ -1,4 +1,3 @@
-/*
 output "eni_id" {
   description = "ID of the ENI for the NAT instance"
   value       = aws_network_interface.this.id
@@ -9,7 +8,6 @@ output "eni_private_ip" {
   # workaround of https://github.com/terraform-providers/terraform-provider-aws/issues/7522
   value = tolist(aws_network_interface.this.private_ips)[0]
 }
-*/
 
 output "sg_id" {
   description = "ID of the security group of the NAT instance"

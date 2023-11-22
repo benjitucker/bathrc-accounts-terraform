@@ -34,14 +34,5 @@ data "aws_iam_policy_document" "api-gateway-access" {
     resources = [
       "arn:aws:s3:::${local.bucket_name}/*",
     ]
-
-    condition {
-      test     = "ArnLike"
-      variable = "aws:SourceArn"
-
-      values = [
-        "${module.api_gateway.apigatewayv2_api_execution_arn}/*/GET/",
-      ]
-    }
   }
 }

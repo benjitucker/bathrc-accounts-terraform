@@ -54,7 +54,6 @@ The checks will also be performed automatically by pre-commit when attempting to
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_api_gateway"></a> [api\_gateway](#module\_api\_gateway) | terraform-aws-modules/apigateway-v2/aws | ~> 2.0 |
 | <a name="module_bathrc-accounts-backend"></a> [bathrc-accounts-backend](#module\_bathrc-accounts-backend) | ./lambda | n/a |
 | <a name="module_frontend_bucket"></a> [frontend\_bucket](#module\_frontend\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0 |
 | <a name="module_nat"></a> [nat](#module\_nat) | int128/nat-instance/aws | ~> 2.0 |
@@ -120,7 +119,6 @@ The checks will also be performed automatically by pre-commit when attempting to
 | Name | Description |
 |------|-------------|
 | <a name="output_apigw-invoke-url"></a> [apigw-invoke-url](#output\_apigw-invoke-url) | n/a |
-| <a name="output_apigwv2-api-endpoint"></a> [apigwv2-api-endpoint](#output\_apigwv2-api-endpoint) | n/a |
 | <a name="output_private_instance_id"></a> [private\_instance\_id](#output\_private\_instance\_id) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

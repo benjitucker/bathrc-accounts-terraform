@@ -191,9 +191,17 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
       aws_api_gateway_resource.Item.id,
       aws_api_gateway_method.GetBuckets.id,
       aws_api_gateway_integration.S3Integration.id,
+      aws_api_gateway_method_response.Status200.id,
+      aws_api_gateway_method_response.Status400.id,
+      aws_api_gateway_method_response.Status500.id,
+      aws_api_gateway_integration_response.IntegrationResponse200.id,
+      aws_api_gateway_integration_response.IntegrationResponse400.id,
+      aws_api_gateway_integration_response.IntegrationResponse500.id,
       aws_api_gateway_resource.backend-lambda.id,
       aws_api_gateway_method.backend-lambda-get.id,
       aws_api_gateway_integration.backend-lambda.id,
+      aws_api_gateway_method.backend-lambda-post.id,
+      aws_api_gateway_integration.backend-lambda-post.id,
     ]))
   }
 

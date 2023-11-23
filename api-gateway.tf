@@ -188,7 +188,7 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
 
   triggers = {
     redeployment = sha1(jsonencode([
-      aws_api_gateway_resource.Folder.id,
+      aws_api_gateway_resource.ui.id,
       aws_api_gateway_resource.Item.id,
       aws_api_gateway_method.GetBuckets.id,
       aws_api_gateway_integration.S3Integration.id,

@@ -266,7 +266,7 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
 resource "aws_api_gateway_stage" "S3APIStage" {
   deployment_id = aws_api_gateway_deployment.S3APIDeployment.id
   rest_api_id   = aws_api_gateway_rest_api.MyS3.id
-  stage_name    = "MyS3"
+  stage_name    = "bathrc"
 }
 
 

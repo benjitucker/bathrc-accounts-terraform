@@ -111,10 +111,10 @@ resource "aws_api_gateway_integration_response" "IntegrationResponse200" {
   status_code = aws_api_gateway_method_response.Status200.status_code
 
   response_parameters = {
-    "method.response.header.Timestamp"      = "integration.response.header.Date"
-    "method.response.header.Content-Length" = "integration.response.header.Content-Length"
+    "method.response.header.Timestamp" = "integration.response.header.Date"
     # TODO:
-    #    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+    #"method.response.header.Content-Length" = "integration.response.header.Content-Length"
+    #"method.response.header.Content-Type"   = "integration.response.header.Content-Type"
   }
 }
 

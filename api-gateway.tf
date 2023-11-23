@@ -60,7 +60,7 @@ resource "aws_api_gateway_method" "GetBuckets" {
 resource "aws_api_gateway_integration" "S3Integration-index" {
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
   resource_id = aws_api_gateway_resource.ui.id
-  http_method = aws_api_gateway_method.GetBuckets.http_method
+  http_method = aws_api_gateway_method.ui.http_method
 
   # Included because of this issue: https://github.com/hashicorp/terraform/issues/10501
   integration_http_method = "GET"

@@ -69,7 +69,7 @@ resource "aws_api_gateway_integration" "S3Integration" {
 
 resource "aws_api_gateway_method_response" "Status200" {
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
-  resource_id = aws_api_gateway_rest_api.MyS3.root_resource_id
+  resource_id = aws_api_gateway_resource.Item.id
   http_method = aws_api_gateway_method.GetBuckets.http_method
   status_code = "200"
 
@@ -110,14 +110,11 @@ resource "aws_api_gateway_integration_response" "IntegrationResponse200" {
   http_method = aws_api_gateway_method.GetBuckets.http_method
   status_code = aws_api_gateway_method_response.Status200.status_code
 
-  # TODO:
-  /*
   response_parameters = {
-    "method.response.header.Timestamp" = "integration.response.header.Date"
+    "method.response.header.Timestamp"      = "integration.response.header.Date"
     "method.response.header.Content-Length" = "integration.response.header.Content-Length"
     "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
   }
-  */
 }
 
 resource "aws_api_gateway_integration_response" "IntegrationResponse400" {

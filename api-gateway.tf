@@ -104,6 +104,23 @@ resource "aws_api_gateway_method_response" "Status200" {
   }
 }
 
+resource "aws_api_gateway_method_response" "StatusIndex200" {
+  rest_api_id = aws_api_gateway_rest_api.MyS3.id
+  resource_id = aws_api_gateway_resource.ui.id
+  http_method = aws_api_gateway_method.ui.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Timestamp"      = true
+    "method.response.header.Content-Length" = true
+    "method.response.header.Content-Type"   = true
+  }
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+}
+
 resource "aws_api_gateway_method_response" "Status400" {
   depends_on = [aws_api_gateway_integration.S3Integration]
 
@@ -129,6 +146,21 @@ resource "aws_api_gateway_integration_response" "IntegrationResponse200" {
   resource_id = aws_api_gateway_resource.Item.id
   http_method = aws_api_gateway_method.GetBuckets.http_method
   status_code = aws_api_gateway_method_response.Status200.status_code
+
+  response_parameters = {
+    "method.response.header.Timestamp"      = "integration.response.header.Date"
+    "method.response.header.Content-Length" = "integration.response.header.Content-Length"
+    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "IntegrationIndexResponse200" {
+  depends_on = [aws_api_gateway_integration.S3Integration-index]
+
+  rest_api_id = aws_api_gateway_rest_api.MyS3.id
+  resource_id = aws_api_gateway_resource.ui.id
+  http_method = aws_api_gateway_method.ui.http_method
+  status_code = aws_api_gateway_method_response.StatusIndex200.status_code
 
   response_parameters = {
     "method.response.header.Timestamp"      = "integration.response.header.Date"

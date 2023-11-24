@@ -199,11 +199,28 @@ resource "aws_api_gateway_resource" "backend-lambda" {
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
 }
 
+resource "aws_api_gateway_resource" "backend-item" {
+  rest_api_id = aws_api_gateway_rest_api.MyS3.id
+  parent_id   = aws_api_gateway_resource.backend-lambda.id
+  path_part   = "{item}"
+}
+
 resource "aws_api_gateway_method" "backend-lambda-get" {
   rest_api_id   = aws_api_gateway_rest_api.MyS3.id
   resource_id   = aws_api_gateway_resource.backend-lambda.id
   http_method   = "GET"
   authorization = "NONE"
+}
+
+resource "aws_api_gateway_method" "backend-item-get" {
+  rest_api_id   = aws_api_gateway_rest_api.MyS3.id
+  resource_id   = aws_api_gateway_resource.backend-item.id
+  http_method   = "GET"
+  authorization = "NONE"
+
+  request_parameters = {
+    "method.request.path.item" = true
+  }
 }
 
 resource "aws_api_gateway_integration" "backend-lambda" {
@@ -215,11 +232,35 @@ resource "aws_api_gateway_integration" "backend-lambda" {
   uri                     = module.bathrc-accounts-backend.invoke_arn
 }
 
+resource "aws_api_gateway_integration" "backend-item" {
+  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
+  resource_id             = aws_api_gateway_resource.backend-item.id
+  http_method             = aws_api_gateway_method.backend-item-get.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = module.bathrc-accounts-backend.invoke_arn
+
+  request_parameters = {
+    "integration.request.path.item" = "method.request.path.item"
+  }
+}
+
 resource "aws_api_gateway_method" "backend-lambda-post" {
   rest_api_id   = aws_api_gateway_rest_api.MyS3.id
   resource_id   = aws_api_gateway_resource.backend-lambda.id
   http_method   = "POST"
   authorization = "NONE"
+}
+
+resource "aws_api_gateway_method" "backend-item-post" {
+  rest_api_id   = aws_api_gateway_rest_api.MyS3.id
+  resource_id   = aws_api_gateway_resource.backend-item.id
+  http_method   = "POST"
+  authorization = "NONE"
+
+  request_parameters = {
+    "method.request.path.item" = true
+  }
 }
 
 resource "aws_api_gateway_integration" "backend-lambda-post" {
@@ -229,6 +270,19 @@ resource "aws_api_gateway_integration" "backend-lambda-post" {
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = module.bathrc-accounts-backend.invoke_arn
+}
+
+resource "aws_api_gateway_integration" "backend-item-post" {
+  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
+  resource_id             = aws_api_gateway_resource.backend-item.id
+  http_method             = aws_api_gateway_method.backend-item-post.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = module.bathrc-accounts-backend.invoke_arn
+
+  request_parameters = {
+    "integration.request.path.item" = "method.request.path.item"
+  }
 }
 
 # DEPLOYMENT:

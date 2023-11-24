@@ -324,6 +324,19 @@ resource "aws_api_gateway_stage" "S3APIStage" {
   stage_name    = "bathrc"
 }
 
+resource "aws_api_gateway_usage_plan" "S3API" {
+  name = "${var.env_name}-usage-plan"
+
+  api_stages {
+    api_id = aws_api_gateway_rest_api.MyS3.id
+    stage  = aws_api_gateway_stage.S3APIStage.stage_name
+  }
+
+  throttle_settings {
+    burst_limit = 100
+    rate_limit  = 2000
+  }
+}
 
 # OUTPUT:
 

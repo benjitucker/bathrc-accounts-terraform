@@ -46,3 +46,15 @@ variable "test_instance" {
   type    = bool
   default = false
 }
+
+variable "auth0_domain" {
+  type = string
+}
+
+variable "auth0_client_id" {
+  type = string
+}
+
+variable "auth0_client_secret" {
+  type = string
+}

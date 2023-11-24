@@ -36,6 +36,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_auth0"></a> [auth0](#requirement\_auth0) | ~> 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
 | <a name="requirement_docker"></a> [docker](#requirement\_docker) | ~> 3.0 |
 | <a name="requirement_mongodbatlas"></a> [mongodbatlas](#requirement\_mongodbatlas) | ~> 1.0 |
@@ -46,6 +47,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 
 | Name | Version |
 |------|---------|
+| <a name="provider_auth0"></a> [auth0](#provider\_auth0) | ~> 1.0 |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 5.24.0 |
 | <a name="provider_mongodbatlas"></a> [mongodbatlas](#provider\_mongodbatlas) | 1.12.3 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.4.3 |
@@ -63,6 +65,12 @@ The checks will also be performed automatically by pre-commit when attempting to
 
 | Name | Type |
 |------|------|
+| [auth0_client.frontend](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/client) | resource |
+| [auth0_connection.google](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/connection) | resource |
+| [auth0_resource_server.backend](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/resource_server) | resource |
+| [auth0_resource_server_scopes.backend](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/resource_server_scopes) | resource |
+| [auth0_role.admin](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/role) | resource |
+| [auth0_role_permissions.admin](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/role_permissions) | resource |
 | [aws_api_gateway_deployment.S3APIDeployment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_deployment) | resource |
 | [aws_api_gateway_integration.S3Integration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration) | resource |
 | [aws_api_gateway_integration.S3Integration-index](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration) | resource |
@@ -116,6 +124,9 @@ The checks will also be performed automatically by pre-commit when attempting to
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_auth0_client_id"></a> [auth0\_client\_id](#input\_auth0\_client\_id) | n/a | `string` | n/a | yes |
+| <a name="input_auth0_client_secret"></a> [auth0\_client\_secret](#input\_auth0\_client\_secret) | n/a | `string` | n/a | yes |
+| <a name="input_auth0_domain"></a> [auth0\_domain](#input\_auth0\_domain) | n/a | `string` | n/a | yes |
 | <a name="input_aws_account_id"></a> [aws\_account\_id](#input\_aws\_account\_id) | These come from the TF cloud variables (https://app.terraform.io/app/bathrc-accounts/workspaces/bathrc-accounts/variables): | `string` | n/a | yes |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | n/a | `string` | `"eu-west-3"` | no |
 | <a name="input_env_name"></a> [env\_name](#input\_env\_name) | n/a | `string` | `"bathrc-accounts"` | no |

@@ -334,7 +334,7 @@ resource "aws_api_gateway_usage_plan" "S3API" {
 
   throttle_settings {
     burst_limit = 100
-    rate_limit  = 2000
+    rate_limit  = 20
   }
 }
 

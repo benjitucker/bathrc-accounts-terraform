@@ -1,7 +1,10 @@
 resource "auth0_connection" "google" {
   name     = "google"
   strategy = "google-oauth2"
+}
 
+resource "auth0_connection_clients" "frontend" {
+  connection_id = auth0_connection.google.id
   enabled_clients = [
     auth0_client.frontend.id,
   ]

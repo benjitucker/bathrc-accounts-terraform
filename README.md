@@ -67,6 +67,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 |------|------|
 | [auth0_client.frontend](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/client) | resource |
 | [auth0_connection.google](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/connection) | resource |
+| [auth0_connection_clients.frontend](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/connection_clients) | resource |
 | [auth0_resource_server.backend](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/resource_server) | resource |
 | [auth0_resource_server_scopes.backend](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/resource_server_scopes) | resource |
 | [auth0_role.admin](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/role) | resource |

@@ -41,3 +41,8 @@ variable "mongo_public_key" {
 variable "mongo_private_key" {
   type = string
 }
+
+variable "test_instance" {
+  type    = bool
+  default = false
+}

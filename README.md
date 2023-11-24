@@ -118,6 +118,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="input_mongo_private_key"></a> [mongo\_private\_key](#input\_mongo\_private\_key) | n/a | `string` | n/a | yes |
 | <a name="input_mongo_project"></a> [mongo\_project](#input\_mongo\_project) | n/a | `string` | `"bathrc-accounts"` | no |
 | <a name="input_mongo_public_key"></a> [mongo\_public\_key](#input\_mongo\_public\_key) | n/a | `string` | n/a | yes |
+| <a name="input_test_instance"></a> [test\_instance](#input\_test\_instance) | n/a | `bool` | `false` | no |
 | <a name="input_vpc_subnet_cidr"></a> [vpc\_subnet\_cidr](#input\_vpc\_subnet\_cidr) | n/a | `string` | `"10.106.80.0/21"` | no |
 
 ## Outputs

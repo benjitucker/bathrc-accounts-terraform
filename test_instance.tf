@@ -1,10 +1,12 @@
 # an example instance in the private subnet
 resource "aws_instance" "private_instance" {
+  count = var.test_instance ? 1 : 0
+
   ami                    = data.aws_ami.amazon_linux_2.id
   instance_type          = "t3.micro"
-  iam_instance_profile   = aws_iam_instance_profile.private_instance.name
+  iam_instance_profile   = aws_iam_instance_profile.private_instance[0].name
   subnet_id              = module.vpc.private_subnets[0]
-  vpc_security_group_ids = [aws_security_group.private_instance.id]
+  vpc_security_group_ids = [aws_security_group.private_instance[0].id]
 
   tags = {
     Name = "example-terraform-aws-nat-instance"
@@ -19,6 +21,8 @@ EOF
 }
 
 resource "aws_security_group" "private_instance" {
+  count = var.test_instance ? 1 : 0
+
   name        = "example-terraform-aws-nat-instance"
   description = "expose http service"
   vpc_id      = module.vpc.vpc_id
@@ -64,6 +68,8 @@ data "aws_ami" "amazon_linux_2" {
 
 # enable SSM access
 resource "aws_iam_instance_profile" "private_instance" {
+  count = var.test_instance ? 1 : 0
+
   role = aws_iam_role.private_instance.name
 }
 
@@ -90,5 +96,5 @@ resource "aws_iam_role_policy_attachment" "ssm" {
 }
 
 output "private_instance_id" {
-  value = aws_instance.private_instance.id
+  value = var.test_instance ? aws_instance.private_instance[0].id : "none"
 }

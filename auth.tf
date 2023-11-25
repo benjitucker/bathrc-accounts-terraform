@@ -46,7 +46,6 @@ resource "auth0_role" "admin" {
 }
 
 resource "auth0_role_permissions" "admin" {
-  name    = "admin"
   role_id = auth0_role.admin.id
 
   permissions {

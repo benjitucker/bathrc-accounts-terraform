@@ -13,7 +13,7 @@ resource "auth0_connection_clients" "frontend" {
 resource "auth0_client" "frontend" {
   name                = "bathrc-accounts-frontend"
   app_type            = "spa"
-  callbacks           = ["${aws_api_gateway_stage.S3APIStage.invoke_url}/ui"]
+  callbacks           = ["${aws_api_gateway_stage.S3APIStage.invoke_url}/ui/callback"]
   allowed_origins     = ["${aws_api_gateway_stage.S3APIStage.invoke_url}/ui"]
   allowed_logout_urls = ["${aws_api_gateway_stage.S3APIStage.invoke_url}/ui"]
   web_origins         = ["${aws_api_gateway_stage.S3APIStage.invoke_url}/ui"]

@@ -1,5 +1,43 @@
 # S3 Integration:
 
+module "callback_api" {
+  source                  = "./api"
+  parent_id               = aws_api_gateway_resource.ui.id
+  path_part               = "callback"
+  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
+  http_method             = "GET"
+  integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
+  integration_credentials = aws_iam_role.s3_proxy_role.arn
+  integration_http_method = "GET"
+  integration_type        = "AWS"
+  method_responses = [
+    {
+      status_code = "200",
+      method_response_parameters = {
+        "method.response.header.Timestamp"      = true
+        "method.response.header.Content-Length" = true
+        "method.response.header.Content-Type"   = true
+      },
+      method_response_models = {
+        "application/json" = "Empty"
+      },
+      integration_response_parameters = {
+        "method.response.header.Timestamp"      = "integration.response.header.Date"
+        "method.response.header.Content-Length" = "integration.response.header.Content-Length"
+        "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+      },
+    },
+    {
+      status_code                   = "400",
+      integration_selection_pattern = "4\\d{2}"
+    },
+    {
+      status_code                   = "500",
+      integration_selection_pattern = "5\\d{2}"
+    },
+  ]
+}
+
 resource "aws_iam_role" "s3_proxy_role" {
   name               = "${var.env_name}-s3-proxy-role"
   path               = "/"
@@ -310,6 +348,7 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
       aws_api_gateway_integration.backend-lambda.id,
       aws_api_gateway_method.backend-lambda-post.id,
       aws_api_gateway_integration.backend-lambda-post.id,
+      module.callback_api.deployment_trigger,
     ]))
   }
 

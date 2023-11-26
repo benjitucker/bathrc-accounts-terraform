@@ -57,6 +57,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_bathrc-accounts-backend"></a> [bathrc-accounts-backend](#module\_bathrc-accounts-backend) | ./lambda | n/a |
+| <a name="module_callback_api"></a> [callback\_api](#module\_callback\_api) | ./api | n/a |
 | <a name="module_frontend_bucket"></a> [frontend\_bucket](#module\_frontend\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0 |
 | <a name="module_nat"></a> [nat](#module\_nat) | int128/nat-instance/aws | ~> 2.0 |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |

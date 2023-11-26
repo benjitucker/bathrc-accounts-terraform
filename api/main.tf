@@ -39,7 +39,10 @@ resource "aws_api_gateway_method_response" "api" {
 }
 
 resource "aws_api_gateway_integration_response" "api" {
-  depends_on = [aws_api_gateway_integration.api]
+  depends_on = [
+    aws_api_gateway_integration.api,
+    aws_api_gateway_method_response.api
+  ]
 
   for_each = {
     for index, rsp in var.method_responses :

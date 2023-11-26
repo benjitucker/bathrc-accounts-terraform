@@ -1,16 +1,7 @@
 # S3 Integration:
 
-module "callback_api" {
-  source                  = "./api"
-  parent_id               = aws_api_gateway_resource.ui.id
-  path_part               = "callback"
-  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
-  http_method             = "GET"
-  integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
-  integration_credentials = aws_iam_role.s3_proxy_role.arn
-  integration_http_method = "GET"
-  integration_type        = "AWS"
-  method_responses = [
+locals {
+  s3_method_responses = [
     {
       status_code = "200",
       method_response_parameters = {
@@ -36,6 +27,19 @@ module "callback_api" {
       integration_selection_pattern = "5\\d{2}"
     },
   ]
+}
+
+module "callback_api" {
+  source                  = "./api"
+  parent_id               = aws_api_gateway_resource.ui.id
+  path_part               = "callback"
+  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
+  http_method             = "GET"
+  integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
+  integration_credentials = aws_iam_role.s3_proxy_role.arn
+  integration_http_method = "GET"
+  integration_type        = "AWS"
+  method_responses        = local.s3_method_responses
 }
 
 resource "aws_iam_role" "s3_proxy_role" {

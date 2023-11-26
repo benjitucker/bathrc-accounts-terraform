@@ -46,12 +46,12 @@ variable "integration_request_parameters" {
 }
 
 variable "method_responses" {
-  type = list(map(object({
+  type = list(object({
     status_code                     = string
     method_response_parameters      = optional(map(bool), {})
     method_response_models          = optional(map(string), {})
     integration_response_parameters = optional(map(string), {})
     integration_selection_pattern   = optional(string, null)
-  })))
+  }))
   default = []
 }

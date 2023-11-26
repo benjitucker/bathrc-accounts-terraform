@@ -24,7 +24,11 @@ resource "aws_api_gateway_integration" "api" {
 }
 
 resource "aws_api_gateway_method_response" "api" {
-  for_each = var.method_responses
+
+  for_each = {
+    for index, rsp in var.method_responses :
+    rsp.status_code => rsp
+  }
 
   rest_api_id         = var.rest_api_id
   resource_id         = aws_api_gateway_resource.api.id
@@ -34,10 +38,13 @@ resource "aws_api_gateway_method_response" "api" {
   response_models     = each.value.method_response_models
 }
 
-
-resource "aws_api_gateway_integration_response" "IntegrationResponse200" {
+resource "aws_api_gateway_integration_response" "api" {
   depends_on = [aws_api_gateway_integration.api]
-  for_each   = var.method_responses
+
+  for_each = {
+    for index, rsp in var.method_responses :
+    rsp.status_code => rsp
+  }
 
   rest_api_id         = var.rest_api_id
   resource_id         = aws_api_gateway_resource.api.id

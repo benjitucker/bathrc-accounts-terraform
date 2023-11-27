@@ -5,11 +5,11 @@ resource "aws_api_gateway_resource" "api" {
 }
 
 resource "aws_api_gateway_method" "api" {
-  for_each = var.http_methods
+  for_each = toset(var.http_methods)
 
   rest_api_id        = var.rest_api_id
   resource_id        = aws_api_gateway_resource.api.id
-  http_method        = each.value
+  http_method        = each.key
   authorization      = var.authorizer_id == null ? "NONE" : "CUSTOM"
   authorizer_id      = var.authorizer_id
   request_parameters = var.method_request_parameters

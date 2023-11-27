@@ -10,13 +10,8 @@ variable "rest_api_id" {
   type = string
 }
 
-variable "http_method" {
-  type = string
-}
-
-variable "authorization" {
-  type    = string
-  default = "NONE"
+variable "http_methods" {
+  type = list(string)
 }
 
 variable "method_request_parameters" {
@@ -37,7 +32,8 @@ variable "integration_arn_uri" {
 }
 
 variable "integration_credentials" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "integration_request_parameters" {
@@ -54,4 +50,9 @@ variable "method_responses" {
     integration_selection_pattern   = optional(string, null)
   }))
   default = []
+}
+
+variable "authorizer_id" {
+  type    = string
+  default = null
 }

@@ -34,7 +34,7 @@ module "callback_api" {
   parent_id               = aws_api_gateway_resource.ui.id
   path_part               = "callback"
   rest_api_id             = aws_api_gateway_rest_api.MyS3.id
-  http_method             = "GET"
+  http_methods            = ["GET"]
   integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
   integration_credentials = aws_iam_role.s3_proxy_role.arn
   integration_http_method = "GET"
@@ -235,6 +235,31 @@ resource "aws_api_gateway_integration_response" "IntegrationResponse500" {
 
 # Lambda Integration:
 
+module "backend" {
+  source                  = "./api"
+  parent_id               = aws_api_gateway_rest_api.MyS3.root_resource_id
+  path_part               = "backend"
+  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
+  http_methods            = ["GET", "POST"]
+  authorizer_id           = aws_api_gateway_authorizer.backend.id
+  integration_arn_uri     = module.bathrc-accounts-backend.invoke_arn
+  integration_http_method = "POST"
+  integration_type        = "AWS_PROXY"
+}
+
+module "backend-item" {
+  source                  = "./api"
+  parent_id               = module.backend.resource_id
+  path_part               = "{item}"
+  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
+  http_methods            = ["GET", "POST"]
+  authorizer_id           = aws_api_gateway_authorizer.backend.id
+  integration_arn_uri     = module.bathrc-accounts-backend.invoke_arn
+  integration_http_method = "POST"
+  integration_type        = "AWS_PROXY"
+}
+
+/*
 resource "aws_api_gateway_resource" "backend-lambda" {
   path_part   = "backend"
   parent_id   = aws_api_gateway_rest_api.MyS3.root_resource_id
@@ -326,6 +351,7 @@ resource "aws_api_gateway_integration" "backend-item-post" {
     "integration.request.path.item" = "method.request.path.item"
   }
 }
+*/
 
 # DEPLOYMENT:
 
@@ -347,12 +373,16 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
       aws_api_gateway_integration_response.IntegrationResponse200.id,
       aws_api_gateway_integration_response.IntegrationResponse400.id,
       aws_api_gateway_integration_response.IntegrationResponse500.id,
+      /*
       aws_api_gateway_resource.backend-lambda.id,
       aws_api_gateway_method.backend-lambda-get.id,
       aws_api_gateway_integration.backend-lambda.id,
       aws_api_gateway_method.backend-lambda-post.id,
       aws_api_gateway_integration.backend-lambda-post.id,
+      */
       module.callback_api.deployment_trigger,
+      module.backend.deployment_trigger,
+      module.backend-item.deployment_trigger,
     ]))
   }
 
@@ -385,4 +415,52 @@ resource "aws_api_gateway_usage_plan" "S3API" {
 
 output "apigw-invoke-url" {
   value = aws_api_gateway_stage.S3APIStage.invoke_url
+}
+
+module "bathrc-accounts-authorizer" {
+  source = "./lambda"
+
+  lambda_name = "bathrc-accounts-authorizor"
+  image_tag   = "release"
+
+  env_name       = var.env_name
+  ghcr_urn       = "ghcr.io/benjitucker"
+  subnet_ids     = local.private_subnet_ids
+  vpc_id         = local.vpc_id
+  aws_region     = var.aws_region
+  aws_account_id = var.aws_account_id
+
+  memory_size = 256
+
+  environment_variables = {
+    VARIOUS_AUTH_TODO = "todo"
+  }
+
+  tags = local.tags
+}
+
+resource "aws_api_gateway_authorizer" "backend" {
+  name                   = "bathrc-accounts-backend"
+  rest_api_id            = aws_api_gateway_rest_api.MyS3.id
+  authorizer_uri         = module.bathrc-accounts-authorizer.invoke_arn
+  authorizer_credentials = aws_iam_role.backend_authorizer_invocation.arn
+}
+
+data "aws_iam_policy_document" "backend_authorizer_invocation_assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role" "backend_authorizer_invocation" {
+  name               = "backend_authorizer_auth_invocation"
+  path               = "/"
+  assume_role_policy = data.aws_iam_policy_document.backend_authorizer_invocation_assume_role.json
 }

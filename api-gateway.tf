@@ -443,40 +443,6 @@ resource "aws_api_gateway_authorizer" "backend" {
   name                             = "bathrc-accounts-authorizer"
   rest_api_id                      = aws_api_gateway_rest_api.MyS3.id
   authorizer_uri                   = module.bathrc-accounts-authorizer.invoke_arn
-  authorizer_credentials           = aws_iam_role.backend_authorizer_invocation.arn
   type                             = "TOKEN"
   authorizer_result_ttl_in_seconds = 300
-}
-
-data "aws_iam_policy_document" "backend_authorizer_invocation_assume_role" {
-  statement {
-    effect = "Allow"
-
-    principals {
-      type        = "Service"
-      identifiers = ["apigateway.amazonaws.com"]
-    }
-
-    actions = ["sts:AssumeRole"]
-  }
-}
-
-resource "aws_iam_role" "backend_authorizer_invocation" {
-  name               = "backend_authorizer_auth_invocation"
-  path               = "/"
-  assume_role_policy = data.aws_iam_policy_document.backend_authorizer_invocation_assume_role.json
-}
-
-data "aws_iam_policy_document" "backend_authorizer_invocation_policy" {
-  statement {
-    effect    = "Allow"
-    actions   = ["lambda:InvokeFunction"]
-    resources = [module.bathrc-accounts-authorizer.invoke_arn]
-  }
-}
-
-resource "aws_iam_role_policy" "backend_authorizer_invocation_policy" {
-  name   = "default"
-  role   = aws_iam_role.backend_authorizer_invocation.id
-  policy = data.aws_iam_policy_document.backend_authorizer_invocation_policy.json
 }

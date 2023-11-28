@@ -420,7 +420,7 @@ output "apigw-invoke-url" {
 module "bathrc-accounts-authorizer" {
   source = "./lambda"
 
-  lambda_name = "bathrc-accounts-authorizor"
+  lambda_name = "bathrc-accounts-authorizer"
   image_tag   = "release"
 
   env_name       = var.env_name

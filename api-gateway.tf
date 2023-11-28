@@ -444,7 +444,7 @@ resource "aws_api_gateway_authorizer" "backend" {
   rest_api_id                      = aws_api_gateway_rest_api.MyS3.id
   authorizer_uri                   = module.bathrc-accounts-authorizer.invoke_arn
   authorizer_credentials           = aws_iam_role.backend_authorizer_invocation.arn
-  type                             = TOKEN
+  type                             = "TOKEN"
   authorizer_result_ttl_in_seconds = 300
 }
 

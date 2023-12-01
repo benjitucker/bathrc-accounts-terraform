@@ -433,7 +433,8 @@ module "bathrc-accounts-authorizer" {
   memory_size = 256
 
   environment_variables = {
-    VARIOUS_AUTH_TODO = "todo"
+    AUTH0_DOMAIN   = var.auth0_domain
+    AUTH0_AUDIENCE = auth0_resource_server.backend.identifier
   }
 
   tags = local.tags

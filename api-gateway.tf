@@ -90,11 +90,14 @@ module "ui_item_api" {
   path_part               = "{item}"
   rest_api_id             = aws_api_gateway_rest_api.MyS3.id
   http_methods            = ["GET"]
-  integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
+  integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/{item}"
   integration_credentials = aws_iam_role.s3_proxy_role.arn
   integration_http_method = "GET"
   integration_type        = "AWS"
-  method_responses        = local.s3_method_responses
+  integration_request_parameters = {
+    "integration.request.path.item" = "method.request.path.item"
+  }
+  method_responses = local.s3_method_responses
 }
 
 /*

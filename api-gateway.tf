@@ -388,32 +388,12 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
 
   triggers = {
-    everytime = timestamp()
-    redeployment = sha1(jsonencode([
-      /*
-      aws_api_gateway_resource.ui.id,
-      aws_api_gateway_resource.Item.id,
-      aws_api_gateway_method.GetBuckets.id,
-      aws_api_gateway_method.ui.id,
-      aws_api_gateway_integration.S3Integration.id,
-      aws_api_gateway_integration.S3Integration-index.id,
-      aws_api_gateway_method_response.Status200.id,
-      aws_api_gateway_method_response.Status400.id,
-      aws_api_gateway_method_response.Status500.id,
-      aws_api_gateway_integration_response.IntegrationResponse200.id,
-      aws_api_gateway_integration_response.IntegrationResponse400.id,
-      aws_api_gateway_integration_response.IntegrationResponse500.id,
-      aws_api_gateway_resource.backend-lambda.id,
-      aws_api_gateway_method.backend-lambda-get.id,
-      aws_api_gateway_integration.backend-lambda.id,
-      aws_api_gateway_method.backend-lambda-post.id,
-      aws_api_gateway_integration.backend-lambda-post.id,
-      */
-      module.ui_api.deployment_trigger,
-      module.ui_item_api.deployment_trigger,
-      module.backend.deployment_trigger,
-      module.backend-item.deployment_trigger,
-    ]))
+    trigger = (
+      module.ui_api.deployment_trigger +
+      module.ui_item_api.deployment_trigger +
+      module.backend.deployment_trigger +
+      module.backend-item.deployment_trigger
+    )
   }
 
   lifecycle {

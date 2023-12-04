@@ -391,11 +391,12 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
 
   triggers = {
-    trigger = (
-      module.ui_api.deployment_trigger +
-      module.ui_item_api.deployment_trigger +
-      module.backend.deployment_trigger +
-      module.backend-item.deployment_trigger
+    trigger = join("", [
+      module.ui_api.deployment_trigger,
+      module.ui_item_api.deployment_trigger,
+      module.backend.deployment_trigger,
+      module.backend-item.deployment_trigger,
+      ]
     )
   }
 

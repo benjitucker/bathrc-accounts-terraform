@@ -29,6 +29,7 @@ locals {
   ]
 }
 
+/*
 module "callback_api" {
   source                  = "./api"
   parent_id               = aws_api_gateway_resource.ui.id
@@ -41,6 +42,7 @@ module "callback_api" {
   integration_type        = "AWS"
   method_responses        = local.s3_method_responses
 }
+*/
 
 resource "aws_iam_role" "s3_proxy_role" {
   name               = "${var.env_name}-s3-proxy-role"
@@ -69,6 +71,33 @@ resource "aws_api_gateway_rest_api" "MyS3" {
   description = "API for S3 Integration"
 }
 
+module "ui_api" {
+  source                  = "./api"
+  parent_id               = aws_api_gateway_rest_api.MyS3.root_resource_id
+  path_part               = "ui"
+  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
+  http_methods            = ["GET"]
+  integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
+  integration_credentials = aws_iam_role.s3_proxy_role.arn
+  integration_http_method = "GET"
+  integration_type        = "AWS"
+  method_responses        = local.s3_method_responses
+}
+
+module "ui_item_api" {
+  source                  = "./api"
+  parent_id               = module.ui_api.resource_id
+  path_part               = "{item}"
+  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
+  http_methods            = ["GET"]
+  integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
+  integration_credentials = aws_iam_role.s3_proxy_role.arn
+  integration_http_method = "GET"
+  integration_type        = "AWS"
+  method_responses        = local.s3_method_responses
+}
+
+/*
 resource "aws_api_gateway_resource" "ui" {
   parent_id   = aws_api_gateway_rest_api.MyS3.root_resource_id
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
@@ -232,7 +261,7 @@ resource "aws_api_gateway_integration_response" "IntegrationResponse500" {
 
   selection_pattern = "5\\d{2}"
 }
-
+*/
 # Lambda Integration:
 
 module "backend" {
@@ -361,6 +390,7 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
   triggers = {
     everytime = timestamp()
     redeployment = sha1(jsonencode([
+      /*
       aws_api_gateway_resource.ui.id,
       aws_api_gateway_resource.Item.id,
       aws_api_gateway_method.GetBuckets.id,
@@ -373,14 +403,14 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
       aws_api_gateway_integration_response.IntegrationResponse200.id,
       aws_api_gateway_integration_response.IntegrationResponse400.id,
       aws_api_gateway_integration_response.IntegrationResponse500.id,
-      /*
       aws_api_gateway_resource.backend-lambda.id,
       aws_api_gateway_method.backend-lambda-get.id,
       aws_api_gateway_integration.backend-lambda.id,
       aws_api_gateway_method.backend-lambda-post.id,
       aws_api_gateway_integration.backend-lambda-post.id,
       */
-      module.callback_api.deployment_trigger,
+      module.ui_api.deployment_trigger,
+      module.ui_item_api.deployment_trigger,
       module.backend.deployment_trigger,
       module.backend-item.deployment_trigger,
     ]))

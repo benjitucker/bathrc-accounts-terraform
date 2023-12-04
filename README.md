@@ -60,9 +60,10 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="module_backend-item"></a> [backend-item](#module\_backend-item) | ./api | n/a |
 | <a name="module_bathrc-accounts-authorizer"></a> [bathrc-accounts-authorizer](#module\_bathrc-accounts-authorizer) | ./lambda | n/a |
 | <a name="module_bathrc-accounts-backend"></a> [bathrc-accounts-backend](#module\_bathrc-accounts-backend) | ./lambda | n/a |
-| <a name="module_callback_api"></a> [callback\_api](#module\_callback\_api) | ./api | n/a |
 | <a name="module_frontend_bucket"></a> [frontend\_bucket](#module\_frontend\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0 |
 | <a name="module_nat"></a> [nat](#module\_nat) | int128/nat-instance/aws | ~> 2.0 |
+| <a name="module_ui_api"></a> [ui\_api](#module\_ui\_api) | ./api | n/a |
+| <a name="module_ui_item_api"></a> [ui\_item\_api](#module\_ui\_item\_api) | ./api | n/a |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
 ## Resources
@@ -78,20 +79,6 @@ The checks will also be performed automatically by pre-commit when attempting to
 | [auth0_role_permissions.admin](https://registry.terraform.io/providers/auth0/auth0/latest/docs/resources/role_permissions) | resource |
 | [aws_api_gateway_authorizer.backend](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_authorizer) | resource |
 | [aws_api_gateway_deployment.S3APIDeployment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_deployment) | resource |
-| [aws_api_gateway_integration.S3Integration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration) | resource |
-| [aws_api_gateway_integration.S3Integration-index](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration) | resource |
-| [aws_api_gateway_integration_response.IntegrationIndexResponse200](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration_response) | resource |
-| [aws_api_gateway_integration_response.IntegrationResponse200](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration_response) | resource |
-| [aws_api_gateway_integration_response.IntegrationResponse400](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration_response) | resource |
-| [aws_api_gateway_integration_response.IntegrationResponse500](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_integration_response) | resource |
-| [aws_api_gateway_method.GetBuckets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method) | resource |
-| [aws_api_gateway_method.ui](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method) | resource |
-| [aws_api_gateway_method_response.Status200](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method_response) | resource |
-| [aws_api_gateway_method_response.Status400](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method_response) | resource |
-| [aws_api_gateway_method_response.Status500](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method_response) | resource |
-| [aws_api_gateway_method_response.StatusIndex200](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_method_response) | resource |
-| [aws_api_gateway_resource.Item](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_resource) | resource |
-| [aws_api_gateway_resource.ui](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_resource) | resource |
 | [aws_api_gateway_rest_api.MyS3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_rest_api) | resource |
 | [aws_api_gateway_stage.S3APIStage](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_stage) | resource |
 | [aws_api_gateway_usage_plan.S3API](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/api_gateway_usage_plan) | resource |

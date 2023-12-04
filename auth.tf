@@ -29,6 +29,7 @@ resource "auth0_resource_server" "backend" {
   identifier       = "bathrc-accounts-backend-id"
   signing_alg      = "RS256"
   enforce_policies = true
+  token_dialect    = "access_token_authz"
 
   token_lifetime         = 86400
   token_lifetime_for_web = 7200

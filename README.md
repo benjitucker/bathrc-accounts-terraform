@@ -60,6 +60,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="module_backend-item"></a> [backend-item](#module\_backend-item) | ./api | n/a |
 | <a name="module_bathrc-accounts-authorizer"></a> [bathrc-accounts-authorizer](#module\_bathrc-accounts-authorizer) | ./lambda | n/a |
 | <a name="module_bathrc-accounts-backend"></a> [bathrc-accounts-backend](#module\_bathrc-accounts-backend) | ./lambda | n/a |
+| <a name="module_callback_api"></a> [callback\_api](#module\_callback\_api) | ./api | n/a |
 | <a name="module_frontend_bucket"></a> [frontend\_bucket](#module\_frontend\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 3.0 |
 | <a name="module_nat"></a> [nat](#module\_nat) | int128/nat-instance/aws | ~> 2.0 |
 | <a name="module_ui_api"></a> [ui\_api](#module\_ui\_api) | ./api | n/a |

@@ -29,7 +29,6 @@ locals {
   ]
 }
 
-/*
 module "callback_api" {
   source                  = "./api"
   parent_id               = aws_api_gateway_resource.ui.id
@@ -40,9 +39,8 @@ module "callback_api" {
   integration_credentials = aws_iam_role.s3_proxy_role.arn
   integration_http_method = "GET"
   integration_type        = "AWS"
-  method_responses        = local.s3_method_responses
+  response_parameters     = local.s3_response_params
 }
-*/
 
 resource "aws_iam_role" "s3_proxy_role" {
   name               = "${var.env_name}-s3-proxy-role"

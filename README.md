@@ -128,6 +128,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 |------|-------------|
 | <a name="output_apigw-invoke-url"></a> [apigw-invoke-url](#output\_apigw-invoke-url) | n/a |
 | <a name="output_private_instance_id"></a> [private\_instance\_id](#output\_private\_instance\_id) | n/a |
+| <a name="output_ui-url"></a> [ui-url](#output\_ui-url) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 # Automate Terraform with GitHub Actions

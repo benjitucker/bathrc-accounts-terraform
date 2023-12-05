@@ -1,7 +1,7 @@
 # S3 Integration:
 
 locals {
-  s3_method_responses = [
+  s3_response_params = [
     {
       status_code = "200",
       method_response_parameters = {
@@ -81,23 +81,7 @@ module "ui_api" {
   integration_credentials = aws_iam_role.s3_proxy_role.arn
   integration_http_method = "GET"
   integration_type        = "AWS"
-  method_responses        = local.s3_method_responses
-}
-
-module "ui_item_api" {
-  source                  = "./api"
-  parent_id               = module.ui_api.resource_id
-  path_part               = "{item}"
-  rest_api_id             = aws_api_gateway_rest_api.MyS3.id
-  http_methods            = ["GET"]
-  integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/{item}"
-  integration_credentials = aws_iam_role.s3_proxy_role.arn
-  integration_http_method = "GET"
-  integration_type        = "AWS"
-  integration_request_parameters = {
-    "integration.request.path.item" = "method.request.path.item"
-  }
-  method_responses = local.s3_method_responses
+  response_parameters     = local.s3_response_params
 }
 
 /*
@@ -107,28 +91,11 @@ resource "aws_api_gateway_resource" "ui" {
   path_part   = "ui"
 }
 
-resource "aws_api_gateway_resource" "Item" {
-  rest_api_id = aws_api_gateway_rest_api.MyS3.id
-  parent_id   = aws_api_gateway_resource.ui.id
-  path_part   = "{item}"
-}
-
 resource "aws_api_gateway_method" "ui" {
   rest_api_id   = aws_api_gateway_rest_api.MyS3.id
   resource_id   = aws_api_gateway_resource.ui.id
   http_method   = "GET"
   authorization = "NONE"
-}
-
-resource "aws_api_gateway_method" "GetBuckets" {
-  rest_api_id   = aws_api_gateway_rest_api.MyS3.id
-  resource_id   = aws_api_gateway_resource.Item.id
-  http_method   = "GET"
-  authorization = "NONE"
-
-  request_parameters = {
-    "method.request.path.item" = true
-  }
 }
 
 resource "aws_api_gateway_integration" "S3Integration-index" {
@@ -142,6 +109,75 @@ resource "aws_api_gateway_integration" "S3Integration-index" {
 
   uri         = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/index.html"
   credentials = aws_iam_role.s3_proxy_role.arn
+}
+
+resource "aws_api_gateway_method_response" "StatusIndex200" {
+  rest_api_id = aws_api_gateway_rest_api.MyS3.id
+  resource_id = aws_api_gateway_resource.ui.id
+  http_method = aws_api_gateway_method.ui.http_method
+  status_code = "200"
+
+  response_parameters = {
+    "method.response.header.Timestamp"      = true
+    "method.response.header.Content-Length" = true
+    "method.response.header.Content-Type"   = true
+  }
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "IntegrationIndexResponse200" {
+  depends_on = [aws_api_gateway_integration.S3Integration-index]
+
+  rest_api_id = aws_api_gateway_rest_api.MyS3.id
+  resource_id = aws_api_gateway_resource.ui.id
+  http_method = aws_api_gateway_method.ui.http_method
+  status_code = aws_api_gateway_method_response.StatusIndex200.status_code
+
+  response_parameters = {
+    "method.response.header.Timestamp"      = "integration.response.header.Date"
+    "method.response.header.Content-Length" = "integration.response.header.Content-Length"
+    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+  }
+}
+*/
+
+module "ui_item_api" {
+  source       = "./api"
+  parent_id    = module.ui_api.resource_id
+  path_part    = "{item}"
+  rest_api_id  = aws_api_gateway_rest_api.MyS3.id
+  http_methods = ["GET"]
+
+  request_parameters = {
+    method_request_parameters      = { "method.request.path.item" = true }
+    integration_request_parameters = { "integration.request.path.item" = "method.request.path.item" }
+  }
+  integration_arn_uri     = "arn:aws:apigateway:${var.aws_region}:s3:path/${local.bucket_name}/{item}"
+  integration_credentials = aws_iam_role.s3_proxy_role.arn
+  integration_http_method = "GET"
+  integration_type        = "AWS"
+  response_parameters     = local.s3_response_params
+}
+
+/*
+resource "aws_api_gateway_resource" "Item" {
+  rest_api_id = aws_api_gateway_rest_api.MyS3.id
+  parent_id   = aws_api_gateway_resource.ui.id
+  path_part   = "{item}"
+}
+
+resource "aws_api_gateway_method" "GetBuckets" {
+  rest_api_id   = aws_api_gateway_rest_api.MyS3.id
+  resource_id   = aws_api_gateway_resource.Item.id
+  http_method   = "GET"
+  authorization = "NONE"
+
+  request_parameters = {
+    "method.request.path.item" = true
+  }
 }
 
 resource "aws_api_gateway_integration" "S3Integration" {
@@ -165,23 +201,6 @@ resource "aws_api_gateway_method_response" "Status200" {
   rest_api_id = aws_api_gateway_rest_api.MyS3.id
   resource_id = aws_api_gateway_resource.Item.id
   http_method = aws_api_gateway_method.GetBuckets.http_method
-  status_code = "200"
-
-  response_parameters = {
-    "method.response.header.Timestamp"      = true
-    "method.response.header.Content-Length" = true
-    "method.response.header.Content-Type"   = true
-  }
-
-  response_models = {
-    "application/json" = "Empty"
-  }
-}
-
-resource "aws_api_gateway_method_response" "StatusIndex200" {
-  rest_api_id = aws_api_gateway_rest_api.MyS3.id
-  resource_id = aws_api_gateway_resource.ui.id
-  http_method = aws_api_gateway_method.ui.http_method
   status_code = "200"
 
   response_parameters = {
@@ -220,21 +239,6 @@ resource "aws_api_gateway_integration_response" "IntegrationResponse200" {
   resource_id = aws_api_gateway_resource.Item.id
   http_method = aws_api_gateway_method.GetBuckets.http_method
   status_code = aws_api_gateway_method_response.Status200.status_code
-
-  response_parameters = {
-    "method.response.header.Timestamp"      = "integration.response.header.Date"
-    "method.response.header.Content-Length" = "integration.response.header.Content-Length"
-    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
-  }
-}
-
-resource "aws_api_gateway_integration_response" "IntegrationIndexResponse200" {
-  depends_on = [aws_api_gateway_integration.S3Integration-index]
-
-  rest_api_id = aws_api_gateway_rest_api.MyS3.id
-  resource_id = aws_api_gateway_resource.ui.id
-  http_method = aws_api_gateway_method.ui.http_method
-  status_code = aws_api_gateway_method_response.StatusIndex200.status_code
 
   response_parameters = {
     "method.response.header.Timestamp"      = "integration.response.header.Date"

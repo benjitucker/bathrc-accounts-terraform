@@ -413,6 +413,7 @@ resource "aws_api_gateway_deployment" "S3APIDeployment" {
     trigger = join("", [
       module.ui_api.deployment_trigger,
       module.ui_item_api.deployment_trigger,
+      module.callback_api.deployment_trigger,
       module.backend.deployment_trigger,
       module.backend-item.deployment_trigger,
       ]

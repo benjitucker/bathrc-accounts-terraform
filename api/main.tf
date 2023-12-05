@@ -12,7 +12,7 @@ resource "aws_api_gateway_method" "api" {
   http_method        = each.key
   authorization      = var.authorizer_id == null ? "NONE" : "CUSTOM"
   authorizer_id      = var.authorizer_id
-  request_parameters = var.method_request_parameters
+  request_parameters = var.request_parameters.method_request_parameters
 }
 
 resource "aws_api_gateway_integration" "api" {
@@ -25,13 +25,13 @@ resource "aws_api_gateway_integration" "api" {
   type                    = var.integration_type
   uri                     = var.integration_arn_uri
   credentials             = var.integration_credentials
-  request_parameters      = var.integration_request_parameters
+  request_parameters      = var.request_parameters.integration_request_parameters
 }
 
 locals {
-  http_method_responses = distinct(flatten([
+  method_response_params = distinct(flatten([
     for http_method in var.http_methods : [
-      for method_response in var.method_responses : {
+      for method_response in var.response_parameters : {
         http_method     = http_method
         method_response = method_response
       }
@@ -45,7 +45,7 @@ resource "aws_api_gateway_method_response" "api" {
   ]
 
   for_each = {
-    for entry in local.http_method_responses :
+    for entry in local.method_response_params :
     "${entry.http_method}.${entry.method_response.status_code}" => entry
   }
 
@@ -65,7 +65,7 @@ resource "aws_api_gateway_integration_response" "api" {
   ]
 
   for_each = {
-    for entry in local.http_method_responses :
+    for entry in local.method_response_params :
     "${entry.http_method}.${entry.method_response.status_code}" => entry
   }
 

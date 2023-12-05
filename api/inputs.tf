@@ -14,11 +14,6 @@ variable "http_methods" {
   type = list(string)
 }
 
-variable "method_request_parameters" {
-  type    = map(bool)
-  default = {}
-}
-
 variable "integration_http_method" {
   type = string
 }
@@ -36,12 +31,18 @@ variable "integration_credentials" {
   default = null
 }
 
-variable "integration_request_parameters" {
-  type    = map(string)
-  default = {}
+variable "request_parameters" {
+  type = object({
+    method_request_parameters      = optional(map(bool), {})
+    integration_request_parameters = optional(map(string), {})
+  })
+  default = {
+    method_request_parameters      = {},
+    integration_request_parameters = {}
+  }
 }
 
-variable "method_responses" {
+variable "response_parameters" {
   type = list(object({
     status_code                     = string
     method_response_parameters      = optional(map(bool), {})

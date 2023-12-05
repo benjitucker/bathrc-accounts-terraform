@@ -81,7 +81,24 @@ module "ui_api" {
   integration_credentials = aws_iam_role.s3_proxy_role.arn
   integration_http_method = "GET"
   integration_type        = "AWS"
-  response_parameters     = local.s3_response_params
+  response_parameters = [
+    {
+      status_code = "200",
+      method_response_parameters = {
+        "method.response.header.Timestamp"      = true
+        "method.response.header.Content-Length" = true
+        "method.response.header.Content-Type"   = true
+      },
+      method_response_models = {
+        "application/json" = "Empty"
+      },
+      integration_response_parameters = {
+        "method.response.header.Timestamp"      = "integration.response.header.Date"
+        "method.response.header.Content-Length" = "integration.response.header.Content-Length"
+        "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+      },
+    }
+  ]
 }
 
 /*

@@ -153,17 +153,27 @@ resource "aws_lambda_function_url" "default" {
    */
 }
 
-# Allow public invocation of the Function URL
-resource "aws_lambda_permission" "function_url_public" {
-  statement_id  = "AllowPublicFunctionURLAccess"
-  action        = "lambda:InvokeFunctionUrl"
-  function_name = aws_lambda_function.default.function_name
-  principal     = "*"
-}
-
 resource "aws_lambda_permission" "function_invoke" {
   statement_id  = "AllowPublicFunctionAccess"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.default.function_name
   principal     = "*"
+}
+
+# Use AWS CLI to add the *required* conditional permission
+resource "null_resource" "lambda_function_url_permission" {
+  provisioner "local-exec" {
+    command = <<EOT
+aws lambda add-permission \
+  --function-name ${aws_lambda_function.default.arn} \
+  --statement-id AllowFunctionURLPublicAccess \
+  --action lambda:InvokeFunctionUrl \
+  --principal "*" \
+  --condition '{"StringEquals":{"lambda:FunctionUrlAuthType":"NONE"}}'
+EOT
+  }
+
+  triggers = {
+    function_url = aws_lambda_function_url.default.function_url
+  }
 }

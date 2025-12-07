@@ -47,14 +47,6 @@ data "docker_registry_image" "in-ghcr" {
   name = "${var.ghcr_urn}/${var.lambda_name}:${var.image_tag}"
 }
 
-resource "aws_ecr_repository" "compose" {
-  name = var.lambda_name
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-  force_delete = true
-}
-
 locals {
   sha_id         = substr(split(":", data.docker_registry_image.in-ghcr.sha256_digest)[1], 0, 8)
   dest_image_tag = "${var.image_tag}-${local.sha_id}"

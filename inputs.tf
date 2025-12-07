@@ -14,7 +14,7 @@ variable "vpc_subnet_cidr" {
   default = "10.106.80.0/21"
 }
 
-# These come from the TF cloud variables (https://app.terraform.io/app/bathrc-accounts/workspaces/bathrc-accounts/variables):
+# These come from the TF cloud variables (https://app.terraform.io/app/benjitucker-bathrc/workspaces/bathrc-accounts/variables):
 variable "aws_account_id" {
   type = string
 }

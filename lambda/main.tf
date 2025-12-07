@@ -126,31 +126,19 @@ resource "aws_security_group" "lambda" {
   }
 }
 
-# Allow API gateway to invoke the Lambda function.
-/*
-resource "aws_lambda_permission" "default" {
-  statement_id  = "AllowAPIGatewayInvoke"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.default.arn
-  principal     = "apigateway.amazonaws.com"
-}
-*/
-
 resource "aws_lambda_function_url" "default" {
   function_name = aws_lambda_function.default.function_name
   //  qualifier          = "my_alias"
   authorization_type = "NONE"
 
-  /*
   cors {
     allow_credentials = true
     allow_origins     = ["https://eu.jotform.com"]
-    allow_methods = ["POST"]
+    allow_methods     = ["POST"]
     //    allow_headers     = ["date", "keep-alive"]
     //    expose_headers    = ["keep-alive", "date"]
     max_age = 86400
   }
-   */
 }
 
 resource "aws_lambda_permission" "function_invoke" {

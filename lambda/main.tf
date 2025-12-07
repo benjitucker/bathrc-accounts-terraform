@@ -143,7 +143,7 @@ resource "aws_lambda_function_url" "default" {
 
   cors {
     allow_credentials = true
-    allow_origins     = ["eu.jotform.com"]
+    allow_origins     = ["https://eu.jotform.com"]
     allow_methods     = ["POST"]
     //    allow_headers     = ["date", "keep-alive"]
     //    expose_headers    = ["keep-alive", "date"]

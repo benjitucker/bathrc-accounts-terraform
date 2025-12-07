@@ -26,6 +26,7 @@ provider "aws" {
 
 // Docker and also the skopeo2 providers rely on the github pipeline having logged into GHCR
 provider "docker" {
+  host = "https://ghcr.io"
   registry_auth {
     address       = "ghcr.io"
     auth_disabled = true

@@ -32,6 +32,7 @@ provider "docker" {
     username = "benjitucker"
     password = var.github_pat # Use a variable to securely
   }
+  disable_docker_daemon_check = true
 }
 
 data "aws_ecr_authorization_token" "dest-ecr" {}

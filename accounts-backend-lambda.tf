@@ -13,9 +13,5 @@ module "bathrc-accounts-backend" {
 
   memory_size = 256
 
-  environment_variables = {
-    MONGO_URI = local.mongo_application_user_uri_srv
-  }
-
   tags = local.tags
 }

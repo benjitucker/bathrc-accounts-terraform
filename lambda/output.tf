@@ -17,3 +17,7 @@ output "name" {
 output "alias" {
   value = aws_lambda_alias.default.name
 }
+
+output "function_url" {
+  value = aws_lambda_function_url.default.function_url
+}

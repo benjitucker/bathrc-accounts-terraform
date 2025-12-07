@@ -160,3 +160,10 @@ resource "aws_lambda_permission" "function_url_public" {
   function_name = aws_lambda_function.default.function_name
   principal     = "*"
 }
+
+resource "aws_lambda_permission" "function_invoke" {
+  statement_id  = "AllowPublicFunctionAccess"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.default.function_name
+  principal     = "*"
+}

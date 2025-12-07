@@ -47,7 +47,7 @@ jobs:
 
       # uploads the Terraform configuration to Terraform Cloud
       - name: Upload Configuration
-        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.0.0
+        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.2.0
         id: apply-upload
         with:
           workspace: ${{ env.TF_WORKSPACE }}
@@ -63,7 +63,7 @@ jobs:
 
       # creates a Terraform apply run using the configuration uploaded in the previous step
       - name: Create Apply Run
-        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.0.0
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.2.0
         id: apply-run
         with:
           workspace: ${{ env.TF_WORKSPACE }}
@@ -71,7 +71,7 @@ jobs:
 
       # confirms and applies the run
       - name: Apply
-        uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.0.0
+        uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.2.0
         if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable
         id: apply
         with:

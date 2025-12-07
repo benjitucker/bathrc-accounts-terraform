@@ -153,7 +153,6 @@ resource "aws_lambda_function_url" "default" {
    */
 }
 
-/*
 resource "aws_lambda_permission" "function_invoke" {
   statement_id  = "AllowPublicFunctionAccess"
   action        = "lambda:InvokeFunction"
@@ -161,6 +160,7 @@ resource "aws_lambda_permission" "function_invoke" {
   principal     = "*"
 }
 
+/*
 # Use AWS CLI to add the *required* conditional permission
 resource "null_resource" "lambda_function_url_permission" {
   provisioner "local-exec" {

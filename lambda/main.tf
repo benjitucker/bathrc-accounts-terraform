@@ -2,7 +2,7 @@ locals {
   lambda_policy = [
     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
-    "AmazonEC2ContainerRegistryReadOnly"
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   ]
 
   lambda_policy_count  = length(local.lambda_policy)

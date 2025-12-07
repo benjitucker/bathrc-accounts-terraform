@@ -73,7 +73,9 @@ The checks will also be performed automatically by pre-commit when attempting to
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_jotform_webhook_url"></a> [jotform\_webhook\_url](#output\_jotform\_webhook\_url) | n/a |
 <!-- END_TF_DOCS -->
 
 # Automate Terraform with GitHub Actions

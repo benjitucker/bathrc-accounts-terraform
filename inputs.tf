@@ -18,3 +18,7 @@ variable "vpc_subnet_cidr" {
 variable "aws_account_id" {
   type = string
 }
+
+variable "github_pat" {
+  type = string
+}

@@ -28,8 +28,9 @@ provider "aws" {
 provider "docker" {
   host = "https://ghcr.io"
   registry_auth {
-    address       = "ghcr.io"
-    auth_disabled = true
+    address  = "ghcr.io"
+    username = "benjitucker"
+    password = var.github_pat # Use a variable to securely
   }
 }
 

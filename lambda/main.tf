@@ -99,7 +99,7 @@ resource "aws_lambda_function" "default" {
     security_group_ids = [aws_security_group.lambda.id]
   }
 
-  depends_on = [skopeo2_copy.update-local-ecr]
+  depends_on = [skopeo2_copy.update-local-ecr, aws_ecr_repository_policy.compose]
 }
 
 resource "random_pet" "lambda_alias" {

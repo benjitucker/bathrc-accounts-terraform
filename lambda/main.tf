@@ -168,8 +168,7 @@ aws lambda add-permission \
   --function-name ${aws_lambda_function.default.arn} \
   --statement-id AllowFunctionURLPublicAccess \
   --action lambda:InvokeFunctionUrl \
-  --principal "*" \
-  --condition '{"StringEquals":{"lambda:FunctionUrlAuthType":"NONE"}}'
+  --principal "*"
 EOT
   }
 

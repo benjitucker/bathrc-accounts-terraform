@@ -153,6 +153,7 @@ resource "aws_lambda_function_url" "default" {
    */
 }
 
+/*
 resource "aws_lambda_permission" "function_invoke" {
   statement_id  = "AllowPublicFunctionAccess"
   action        = "lambda:InvokeFunction"
@@ -176,3 +177,4 @@ EOT
     function_url = aws_lambda_function_url.default.function_url
   }
 }
+*/

@@ -152,3 +152,11 @@ resource "aws_lambda_function_url" "default" {
   }
    */
 }
+
+# Allow public invocation of the Function URL
+resource "aws_lambda_permission" "function_url_public" {
+  statement_id  = "FunctionURLAllowPublicAccess"
+  action        = "lambda:InvokeFunctionUrl"
+  function_name = aws_lambda_function.default.function_name
+  principal     = "*"
+}

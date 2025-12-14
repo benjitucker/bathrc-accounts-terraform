@@ -60,6 +60,9 @@ The checks will also be performed automatically by pre-commit when attempting to
 | Name | Type |
 |------|------|
 | [aws_dynamodb_table.basic-dynamodb-table](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table) | resource |
+| [aws_ses_domain_dkim.bathridingclub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_domain_dkim) | resource |
+| [aws_ses_domain_identity.bathridingclub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_domain_identity) | resource |
+| [aws_ses_email_identity.training_email](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_email_identity) | resource |
 | [aws_vpc_endpoint.dynamodb_vpce](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_ecr_authorization_token.dest-ecr](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ecr_authorization_token) | data source |
@@ -79,6 +82,8 @@ The checks will also be performed automatically by pre-commit when attempting to
 | Name | Description |
 |------|-------------|
 | <a name="output_jotform_webhook_url"></a> [jotform\_webhook\_url](#output\_jotform\_webhook\_url) | n/a |
+| <a name="output_ses_dkim_tokens"></a> [ses\_dkim\_tokens](#output\_ses\_dkim\_tokens) | ses\_dkim\_tokens → 3 CNAME records for DKIM. |
+| <a name="output_ses_verification_token"></a> [ses\_verification\_token](#output\_ses\_verification\_token) | ses\_verification\_token → TXT record in 123-reg for domain verification. |
 <!-- END_TF_DOCS -->
 
 # Automate Terraform with GitHub Actions

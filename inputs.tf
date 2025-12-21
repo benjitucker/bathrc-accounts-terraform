@@ -20,5 +20,11 @@ variable "aws_account_id" {
 }
 
 variable "github_pat" {
-  type = string
+  type      = string
+  sensitive = true
+}
+
+variable "jotform_apikey" {
+  type      = string
+  sensitive = true
 }

@@ -64,6 +64,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 | [aws_ses_domain_dkim.bathridingclub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_domain_dkim) | resource |
 | [aws_ses_domain_identity.bathridingclub](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_domain_identity) | resource |
 | [aws_ses_email_identity.training_email](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_email_identity) | resource |
+| [aws_ssm_parameter.jotform-apikey](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_vpc_endpoint.dynamodb_vpce](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.ses](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
@@ -77,6 +78,7 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | n/a | `string` | `"eu-west-3"` | no |
 | <a name="input_env_name"></a> [env\_name](#input\_env\_name) | n/a | `string` | `"bathrc-accounts"` | no |
 | <a name="input_github_pat"></a> [github\_pat](#input\_github\_pat) | n/a | `string` | n/a | yes |
+| <a name="input_jotform_apikey"></a> [jotform\_apikey](#input\_jotform\_apikey) | n/a | `string` | n/a | yes |
 | <a name="input_vpc_subnet_cidr"></a> [vpc\_subnet\_cidr](#input\_vpc\_subnet\_cidr) | n/a | `string` | `"10.106.80.0/21"` | no |
 
 ## Outputs

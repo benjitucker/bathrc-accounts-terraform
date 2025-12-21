@@ -4,7 +4,8 @@ locals {
     "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
     "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
-    "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+    "arn:aws:iam::aws:policy/AmazonSESFullAccess",
+    aws_iam_policy.ssm_access.arn
   ]
 
   lambda_policy_count  = length(local.lambda_policy)
@@ -13,6 +14,26 @@ locals {
   default_environment = {
     ENV_NAME = var.env_name
   }
+}
+
+resource "aws_iam_policy" "ssm_access" {
+  name        = "ssm-parameter-access"
+  description = "Allow Lambda to read all SSM parameters"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_role" "iam_for_lambda" {

@@ -27,8 +27,6 @@ module "vpc" {
   private_subnets      = [local.private_cidr]
   public_subnets       = [local.public_cidr]
   enable_dns_hostnames = true
+  enable_dns_support   = true
   tags                 = local.tags
-
-  // The nat-instance.tf code will create the gateway route using a NAT instance
-  create_private_nat_gateway_route = false
 }

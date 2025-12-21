@@ -47,7 +47,7 @@ resource "aws_instance" "nat_instance" {
   instance_type               = "t4g.nano"
   subnet_id                   = local.public_subnet_id
   associate_public_ip_address = true
-  security_groups             = [aws_security_group.nat_sg.name]
+  vpc_security_group_ids      = [aws_security_group.nat_sg.id]
 
   # Enable NAT functionality
   user_data = <<-EOF

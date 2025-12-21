@@ -140,6 +140,9 @@ resource "aws_security_group" "lambda" {
   description = "Security group for ${local.lambda_function_name} lambda"
   vpc_id      = var.vpc_id
 
+  # No ingress rules => blocks all inbound traffic
+  ingress = []
+
   /* Allow any outward communication */
   egress {
     from_port   = 0
@@ -147,6 +150,8 @@ resource "aws_security_group" "lambda" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = var.tags
 }
 
 resource "aws_lambda_function_url" "default" {

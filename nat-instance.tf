@@ -59,20 +59,9 @@ resource "aws_instance" "nat_instance" {
   tags = local.tags
 }
 
-# Update route table of private subnet to use the NAT instance
-resource "aws_route_table_association" "private_subnets" {
-  subnet_id      = local.private_subnet_id
-  route_table_id = aws_route_table.private.id
-}
-
-resource "aws_route_table" "private" {
-  vpc_id = local.vpc_id
-  tags   = local.tags
-}
-
-# Add default route via NAT instance
+# Use the existing private route tables from the VPC module
 resource "aws_route" "private_nat_route" {
-  route_table_id         = aws_route_table.private.id
+  route_table_id         = local.private_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   network_interface_id   = aws_instance.nat_instance.primary_network_interface_id
 }

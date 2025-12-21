@@ -9,9 +9,10 @@ locals {
   az_count = min(3, length(data.aws_availability_zones.available.names))
   azs      = slice(data.aws_availability_zones.available.names, 0, local.az_count)
 
-  vpc_id            = module.vpc.vpc_id
-  public_subnet_id  = module.vpc.public_subnets[0]
-  private_subnet_id = module.vpc.private_subnets[0]
+  vpc_id                 = module.vpc.vpc_id
+  public_subnet_id       = module.vpc.public_subnets[0]
+  private_subnet_id      = module.vpc.private_subnets[0]
+  private_route_table_id = module.vpc.private_route_table_ids[0]
 }
 
 # Fetch AZs in the current region

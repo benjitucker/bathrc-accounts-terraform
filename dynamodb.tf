@@ -14,7 +14,7 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
   tags = local.tags
 }
 
-resource "aws_dynamodb_table" "basic-dynamodb-table" {
+resource "aws_dynamodb_table" "members-dynamodb-table" {
   name           = "Members"
   billing_mode   = "PROVISIONED"
   read_capacity  = 2 # We have a limited number of capacity units in the free tier

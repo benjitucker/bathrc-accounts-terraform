@@ -13,7 +13,7 @@ resource "aws_security_group" "nat_sg" {
   #  cidr_blocks = ["0.0.0.0/0"]
   #}
 
-  # Allow inbound HTTPS traffic from private subnets
+  # Allow inbound HTTPS traffic from the private subnet
   ingress {
     from_port   = 443
     to_port     = 443

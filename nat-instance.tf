@@ -67,11 +67,12 @@ resource "aws_route_table_association" "private_subnets" {
 
 resource "aws_route_table" "private" {
   vpc_id = local.vpc_id
+  tags   = local.tags
+}
 
-  route {
-    cidr_block  = "0.0.0.0/0"
-    instance_id = aws_instance.nat_instance.id
-  }
-
-  tags = local.tags
+# Add default route via NAT instance
+resource "aws_route" "private_nat_route" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = "0.0.0.0/0"
+  instance_id            = aws_instance.nat_instance.id
 }

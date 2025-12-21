@@ -1,6 +1,6 @@
 
 # Security group for NAT instance
-resource "aws_security_group" "nat_sg" {
+resource "aws_security_group" "nat_ec2_sg" {
   name        = "nat-instance-sg"
   description = "Allow HTTPS traffic to and from NAT instance"
   vpc_id      = local.vpc_id
@@ -18,50 +18,78 @@ resource "aws_security_group" "nat_sg" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = [local.private_cidr]
+    cidr_blocks = [module.vpc.vpc_cidr_block]
+    description = "Allow all HTTPS traffic from the VPC CIDR"
   }
 
-  # Allow all outbound HTTPS traffic
+  # Allow all HTTPS outbound traffic
   egress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound traffic"
   }
+
+  tags = local.tags
 }
 
-# Get latest Amazon Linux 2 ARM64 AMI
-data "aws_ami" "amazon_linux" {
+# Fetch the latest ARM64 Amazon Linux 2023 AMI
+data "aws_ami" "latest_amazon_linux" {
   most_recent = true
-  owners      = ["amazon"]
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-*-arm64-gp2"]
+    values = ["al2023-ami-2023.*-arm64"] # Using ARM for cost optimization
   }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["amazon"]
 }
 
-# NAT EC2 instance
-resource "aws_instance" "nat_instance" {
-  ami                         = data.aws_ami.amazon_linux.id
-  instance_type               = "t4g.nano"
-  subnet_id                   = local.public_subnet_id
-  associate_public_ip_address = true
-  vpc_security_group_ids      = [aws_security_group.nat_sg.id]
+# Create the NAT instance in the public subnet
+resource "aws_instance" "nat_ec2_instance" {
+  instance_type = "t4g.nano" # ARM-based instance for cost optimization
+  ami           = data.aws_ami.latest_amazon_linux.id
+  subnet_id     = local.public_subnet_id
 
-  # Enable NAT functionality
+  # Bootstrap script to configure NAT functionality
   user_data = <<-EOF
-              #!/bin/bash
-              sysctl -w net.ipv4.ip_forward=1
-              iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-              EOF
+#!/bin/bash
+sudo yum install iptables-services -y
+sudo systemctl enable iptables
+sudo systemctl start iptables
+echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/custom-ip-forwarding.conf
+sudo sysctl -p /etc/sysctl.d/custom-ip-forwarding.conf
+sudo /sbin/iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
+sudo /sbin/iptables -F FORWARD
+sudo service iptables save
+EOF
+
+  source_dest_check      = false # Required for NAT functionality
+  vpc_security_group_ids = [aws_security_group.nat_ec2_sg.id]
 
   tags = local.tags
+}
+
+# Elastic IP for the NAT instance
+resource "aws_eip" "nat_ec2_eip" {
+  tags = local.tags
+}
+
+# Associate the Elastic IP with the NAT instance
+resource "aws_eip_association" "nat_ec2_eip_assoc" {
+  instance_id   = aws_instance.nat_ec2_instance.id
+  allocation_id = aws_eip.nat_ec2_eip.id
 }
 
 # Use the existing private route tables from the VPC module
 resource "aws_route" "private_nat_route" {
   route_table_id         = local.private_route_table_id
   destination_cidr_block = "0.0.0.0/0"
-  network_interface_id   = aws_instance.nat_instance.primary_network_interface_id
+  network_interface_id   = aws_instance.nat_ec2_instance.primary_network_interface_id
 }

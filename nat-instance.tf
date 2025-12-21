@@ -74,5 +74,5 @@ resource "aws_route_table" "private" {
 resource "aws_route" "private_nat_route" {
   route_table_id         = aws_route_table.private.id
   destination_cidr_block = "0.0.0.0/0"
-  instance_id            = aws_instance.nat_instance.id
+  network_interface_id   = aws_instance.nat_instance.primary_network_interface_id
 }

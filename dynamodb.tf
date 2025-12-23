@@ -14,6 +14,22 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
   tags = local.tags
 }
 
+resource "aws_dynamodb_table" "transactions-dynamodb-table" {
+  name           = "Transactions"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 2 # We have a limited number of capacity units in the free tier
+  write_capacity = 2
+  hash_key       = "ID"
+  #  range_key      = "Date"  # I.e. sort key
+
+  attribute {
+    name = "ID"
+    type = "S"
+  }
+
+  tags = local.tags
+}
+
 resource "aws_dynamodb_table" "members-dynamodb-table" {
   name           = "Members"
   billing_mode   = "PROVISIONED"

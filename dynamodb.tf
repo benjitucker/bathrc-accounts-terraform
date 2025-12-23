@@ -29,19 +29,19 @@ resource "aws_dynamodb_table" "transactions-dynamodb-table" {
 
   # GSI attributes, allowing queries that return the transactions after a date
   attribute {
-    name = "Type"
+    name = "txn_type"
     type = "S"
   }
 
   attribute {
-    name = "Date"
+    name = "txn_date"
     type = "S"
   }
 
   global_secondary_index {
     name            = "TypeDateIndex"
-    hash_key        = "Type"
-    range_key       = "Date"
+    hash_key        = "txn_type"
+    range_key       = "txn_date"
     projection_type = "ALL"
 
     // A GSI consumes units from our free allowance

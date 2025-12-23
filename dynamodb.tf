@@ -43,6 +43,10 @@ resource "aws_dynamodb_table" "transactions-dynamodb-table" {
     hash_key        = "Type"
     range_key       = "Date"
     projection_type = "ALL"
+
+    // A GSI consumes units from our free allowance
+    read_capacity  = 2
+    write_capacity = 2
   }
 
   tags = local.tags

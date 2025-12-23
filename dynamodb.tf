@@ -27,6 +27,24 @@ resource "aws_dynamodb_table" "transactions-dynamodb-table" {
     type = "S"
   }
 
+  # GSI attributes, allowing queries that return the transactions after a date
+  attribute {
+    name = "Type"
+    type = "S"
+  }
+
+  attribute {
+    name = "Date"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "TypeDateIndex"
+    hash_key        = "Type"
+    range_key       = "Date"
+    projection_type = "ALL"
+  }
+
   tags = local.tags
 }
 

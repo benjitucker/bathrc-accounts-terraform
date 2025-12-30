@@ -75,6 +75,8 @@ The checks will also be performed automatically by pre-commit when attempting to
 | [aws_ssm_parameter.bathrc_account_number](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.bathrc_sort_code](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.jotform-apikey](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.test_email_address](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.test_email_address2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_vpc_endpoint.dynamodb_vpce](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.ses](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
@@ -93,6 +95,8 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="input_github_pat"></a> [github\_pat](#input\_github\_pat) | n/a | `string` | n/a | yes |
 | <a name="input_jotform_apikey"></a> [jotform\_apikey](#input\_jotform\_apikey) | n/a | `string` | n/a | yes |
 | <a name="input_sort_code"></a> [sort\_code](#input\_sort\_code) | n/a | `string` | n/a | yes |
+| <a name="input_test_email_address"></a> [test\_email\_address](#input\_test\_email\_address) | n/a | `string` | n/a | yes |
+| <a name="input_test_email_address2"></a> [test\_email\_address2](#input\_test\_email\_address2) | n/a | `string` | n/a | yes |
 | <a name="input_vpc_subnet_cidr"></a> [vpc\_subnet\_cidr](#input\_vpc\_subnet\_cidr) | n/a | `string` | `"10.106.80.0/21"` | no |
 
 ## Outputs

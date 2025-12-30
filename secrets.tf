@@ -1,3 +1,19 @@
+resource "aws_ssm_parameter" "test_email_address" {
+  name        = "test-email-address"
+  description = "Email address to send test emails too"
+  type        = "SecureString"
+  value       = var.test_email_address
+  tags        = local.tags
+}
+
+resource "aws_ssm_parameter" "test_email_address2" {
+  name        = "test-email-address2"
+  description = "2nd email address to send test emails too"
+  type        = "SecureString"
+  value       = var.test_email_address2
+  tags        = local.tags
+}
+
 resource "aws_ssm_parameter" "bathrc_account_number" {
   name        = "bathrc-account-number"
   description = "Account number"

@@ -38,3 +38,13 @@ variable "sort_code" {
   type      = string
   sensitive = true
 }
+
+variable "test_email_address" {
+  type      = string
+  sensitive = true
+}
+
+variable "test_email_address2" {
+  type      = string
+  sensitive = true
+}

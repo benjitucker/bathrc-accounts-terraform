@@ -1,5 +1,5 @@
 resource "aws_ssm_parameter" "bathrc_account_number" {
-  name        = "bathrc-account-numbae"
+  name        = "bathrc-account-number"
   description = "Account number"
   type        = "SecureString"
   value       = var.account_number

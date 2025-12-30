@@ -28,3 +28,13 @@ variable "jotform_apikey" {
   type      = string
   sensitive = true
 }
+
+variable "account_number" {
+  type      = string
+  sensitive = true
+}
+
+variable "sort_code" {
+  type      = string
+  sensitive = true
+}

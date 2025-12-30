@@ -1,3 +1,19 @@
+resource "aws_ssm_parameter" "bathrc_account_number" {
+  name        = "bathrc-account-numbae"
+  description = "Account number"
+  type        = "SecureString"
+  value       = var.account_number
+  tags        = local.tags
+}
+
+resource "aws_ssm_parameter" "bathrc_sort_code" {
+  name        = "bathrc-sort-code"
+  description = "Sort code"
+  type        = "SecureString"
+  value       = var.sort_code
+  tags        = local.tags
+}
+
 resource "aws_ssm_parameter" "jotform-apikey" {
   name        = "bathrc-jotform-apikey"
   description = "API key for Jotform access"

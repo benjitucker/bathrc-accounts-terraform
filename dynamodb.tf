@@ -11,6 +11,28 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
     type = "S"
   }
 
+  # GSI attributes, allowing queries that return the submissions after a date
+  attribute {
+    name = "submissionState"
+    type = "S"
+  }
+
+  attribute {
+    name = "trainingDate"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "StateDateIndex"
+    hash_key        = "submissionState"
+    range_key       = "trainingDate"
+    projection_type = "ALL"
+
+    // A GSI consumes units from our free allowance
+    read_capacity  = 2
+    write_capacity = 2
+  }
+
   tags = local.tags
 }
 

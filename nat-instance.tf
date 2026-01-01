@@ -76,17 +76,6 @@ EOF
   tags = local.tags
 }
 
-# Elastic IP for the NAT instance
-resource "aws_eip" "nat_ec2_eip" {
-  tags = local.tags
-}
-
-# Associate the Elastic IP with the NAT instance
-resource "aws_eip_association" "nat_ec2_eip_assoc" {
-  instance_id   = aws_instance.nat_ec2_instance.id
-  allocation_id = aws_eip.nat_ec2_eip.id
-}
-
 # Use the existing private route tables from the VPC module
 resource "aws_route" "private_nat_route" {
   route_table_id         = local.private_route_table_id

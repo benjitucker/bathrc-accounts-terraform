@@ -1,8 +1,8 @@
 resource "aws_dynamodb_table" "basic-dynamodb-table" {
   name           = "TrainingSubmissions"
   billing_mode   = "PROVISIONED"
-  read_capacity  = 2 # We have a limited number of capacity units in the free tier
-  write_capacity = 2
+  read_capacity  = 4 # We have 25 read and 25 write capacity units in the free tier, total
+  write_capacity = 4
   hash_key       = "ID"
   #  range_key      = "Date"  # I.e. sort key
 
@@ -29,8 +29,8 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
     projection_type = "ALL"
 
     // A GSI consumes units from our free allowance
-    read_capacity  = 2
-    write_capacity = 2
+    read_capacity  = 4
+    write_capacity = 4
   }
 
   tags = local.tags
@@ -39,8 +39,8 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
 resource "aws_dynamodb_table" "transactions-dynamodb-table" {
   name           = "Transactions"
   billing_mode   = "PROVISIONED"
-  read_capacity  = 2 # We have a limited number of capacity units in the free tier
-  write_capacity = 2
+  read_capacity  = 4 # We have a limited number of capacity units in the free tier
+  write_capacity = 4
   hash_key       = "ID"
   #  range_key      = "Date"  # I.e. sort key
 
@@ -67,8 +67,8 @@ resource "aws_dynamodb_table" "transactions-dynamodb-table" {
     projection_type = "ALL"
 
     // A GSI consumes units from our free allowance
-    read_capacity  = 2
-    write_capacity = 2
+    read_capacity  = 4
+    write_capacity = 4
   }
 
   tags = local.tags
@@ -77,8 +77,8 @@ resource "aws_dynamodb_table" "transactions-dynamodb-table" {
 resource "aws_dynamodb_table" "members-dynamodb-table" {
   name           = "Members"
   billing_mode   = "PROVISIONED"
-  read_capacity  = 2 # We have a limited number of capacity units in the free tier
-  write_capacity = 2
+  read_capacity  = 4 # We have a limited number of capacity units in the free tier
+  write_capacity = 4
   hash_key       = "ID"
   #  range_key      = "Date"  # I.e. sort key
 

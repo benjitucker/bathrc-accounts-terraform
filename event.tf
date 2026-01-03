@@ -2,7 +2,8 @@
 # EventBridge rule to trigger daily at 00:00 UTC
 resource "aws_cloudwatch_event_rule" "lambda-periodic" {
   name = "lambda-trigger"
-  #schedule_expression = "cron(0 0 * * ? *)"  # daily
+  #schedule_expression = "cron(0 0 * * ? *)"  # daily  (minute=0,hour=0)
+  #schedule_expression = "cron(0 * * * ? *)"  # hourly (minute=0)
   schedule_expression = "cron(* * * * ? *)" # TODO remove
   description         = "Runs Lambda periodically"
 }
@@ -12,6 +13,10 @@ resource "aws_cloudwatch_event_target" "daily_target" {
   rule      = aws_cloudwatch_event_rule.lambda-periodic.name
   target_id = "periodic-lambda"
   arn       = module.bathrc-accounts-backend.arn
+
+  input = jsonencode({
+    period = "hourly"
+  })
 }
 
 # Allow EventBridge to invoke Lambda

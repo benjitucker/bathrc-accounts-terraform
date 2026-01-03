@@ -15,7 +15,8 @@ resource "aws_cloudwatch_event_target" "daily_target" {
   arn       = module.bathrc-accounts-backend.arn
 
   input = jsonencode({
-    period = "hourly"
+    //    period = "hourly"
+    period = "run-test"
   })
 }
 

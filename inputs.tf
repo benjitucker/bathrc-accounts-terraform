@@ -48,3 +48,13 @@ variable "test_email_address2" {
   type      = string
   sensitive = true
 }
+
+variable "club_email_address" {
+  type      = string
+  sensitive = true
+}
+
+variable "training_email_address" {
+  type      = string
+  sensitive = true
+}

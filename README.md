@@ -77,9 +77,11 @@ The checks will also be performed automatically by pre-commit when attempting to
 | [aws_ses_email_identity.training_email](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ses_email_identity) | resource |
 | [aws_ssm_parameter.bathrc_account_number](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.bathrc_sort_code](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.club_email_address](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.jotform-apikey](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.test_email_address](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.test_email_address2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.training_email_address](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_vpc_endpoint.dynamodb_vpce](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.ses](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
 | [aws_vpc_endpoint.ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
@@ -94,12 +96,14 @@ The checks will also be performed automatically by pre-commit when attempting to
 | <a name="input_account_number"></a> [account\_number](#input\_account\_number) | n/a | `string` | n/a | yes |
 | <a name="input_aws_account_id"></a> [aws\_account\_id](#input\_aws\_account\_id) | These come from the TF cloud variables (https://app.terraform.io/app/benjitucker-bathrc/workspaces/bathrc-accounts/variables): | `string` | n/a | yes |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | n/a | `string` | `"eu-west-3"` | no |
+| <a name="input_club_email_address"></a> [club\_email\_address](#input\_club\_email\_address) | n/a | `string` | n/a | yes |
 | <a name="input_env_name"></a> [env\_name](#input\_env\_name) | n/a | `string` | `"bathrc-accounts"` | no |
 | <a name="input_github_pat"></a> [github\_pat](#input\_github\_pat) | n/a | `string` | n/a | yes |
 | <a name="input_jotform_apikey"></a> [jotform\_apikey](#input\_jotform\_apikey) | n/a | `string` | n/a | yes |
 | <a name="input_sort_code"></a> [sort\_code](#input\_sort\_code) | n/a | `string` | n/a | yes |
 | <a name="input_test_email_address"></a> [test\_email\_address](#input\_test\_email\_address) | n/a | `string` | n/a | yes |
 | <a name="input_test_email_address2"></a> [test\_email\_address2](#input\_test\_email\_address2) | n/a | `string` | n/a | yes |
+| <a name="input_training_email_address"></a> [training\_email\_address](#input\_training\_email\_address) | n/a | `string` | n/a | yes |
 | <a name="input_vpc_subnet_cidr"></a> [vpc\_subnet\_cidr](#input\_vpc\_subnet\_cidr) | n/a | `string` | `"10.106.80.0/21"` | no |
 
 ## Outputs

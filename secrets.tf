@@ -14,6 +14,22 @@ resource "aws_ssm_parameter" "test_email_address2" {
   tags        = local.tags
 }
 
+resource "aws_ssm_parameter" "club_email_address" {
+  name        = "club-email-address"
+  description = "email address for the club, used for reply-to"
+  type        = "SecureString"
+  value       = var.club_email_address
+  tags        = local.tags
+}
+
+resource "aws_ssm_parameter" "training_email_address" {
+  name        = "training-email-address"
+  description = "email address for the training emails sender"
+  type        = "SecureString"
+  value       = var.training_email_address
+  tags        = local.tags
+}
+
 resource "aws_ssm_parameter" "bathrc_account_number" {
   name        = "bathrc-account-number"
   description = "Account number"

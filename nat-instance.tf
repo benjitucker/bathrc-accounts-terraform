@@ -65,26 +65,16 @@ sudo systemctl enable iptables
 sudo systemctl start iptables
 echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/custom-ip-forwarding.conf
 sudo sysctl -p /etc/sysctl.d/custom-ip-forwarding.conf
-sudo /sbin/iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
+sudo /sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 sudo /sbin/iptables -F FORWARD
 sudo service iptables save
 EOF
 
-  source_dest_check      = false # Required for NAT functionality
-  vpc_security_group_ids = [aws_security_group.nat_ec2_sg.id]
+  source_dest_check           = false # Required for NAT functionality
+  vpc_security_group_ids      = [aws_security_group.nat_ec2_sg.id]
+  associate_public_ip_address = true
 
   tags = local.tags
-}
-
-# Elastic IP for the NAT instance
-resource "aws_eip" "nat_ec2_eip" {
-  tags = local.tags
-}
-
-# Associate the Elastic IP with the NAT instance
-resource "aws_eip_association" "nat_ec2_eip_assoc" {
-  instance_id   = aws_instance.nat_ec2_instance.id
-  allocation_id = aws_eip.nat_ec2_eip.id
 }
 
 # Use the existing private route tables from the VPC module

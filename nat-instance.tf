@@ -6,12 +6,12 @@ resource "aws_security_group" "nat_ec2_sg" {
   vpc_id      = local.vpc_id
 
   # Allow inbound SSH (optional)
-  #ingress {
-  #  from_port   = 22
-  #  to_port     = 22
-  #  protocol    = "tcp"
-  #  cidr_blocks = ["0.0.0.0/0"]
-  #}
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   # Allow inbound traffic from the private subnet
   ingress {
@@ -75,6 +75,9 @@ resource "aws_instance" "nat_ec2_instance" {
   instance_type = "t4g.nano" # ARM-based instance for cost optimization
   ami           = data.aws_ami.latest_amazon_linux.id
   subnet_id     = local.public_subnet_id
+
+  # For SSH access:
+  key_name = "delme"
 
   # Bootstrap script to configure NAT functionality
   user_data = <<-EOF

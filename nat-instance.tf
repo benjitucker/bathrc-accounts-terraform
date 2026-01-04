@@ -13,13 +13,13 @@ resource "aws_security_group" "nat_ec2_sg" {
   #  cidr_blocks = ["0.0.0.0/0"]
   #}
 
-  # Allow inbound HTTPS traffic from the private subnet
+  # Allow inbound traffic from the private subnet
   ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = [module.vpc.vpc_cidr_block]
-    description = "Allow all HTTPS traffic from the VPC CIDR"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = module.vpc.private_subnets_cidr_blocks
+    description = "Allow all traffic from the VPC Private CIDR"
   }
 
   # Allow all HTTPS outbound traffic
@@ -28,7 +28,15 @@ resource "aws_security_group" "nat_ec2_sg" {
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all outbound traffic"
+    description = "Allow HTTPS outbound traffic"
+  }
+
+  egress {
+    from_port   = 53
+    to_port     = 53
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow DNS outbound traffic"
   }
 
   tags = local.tags

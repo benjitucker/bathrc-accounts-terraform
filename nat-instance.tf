@@ -22,7 +22,17 @@ resource "aws_security_group" "nat_ec2_sg" {
     description = "Allow all traffic from the VPC Private CIDR"
   }
 
+  # Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound traffic"
+  }
+
   # Allow all HTTPS outbound traffic
+  /*
   egress {
     from_port   = 443
     to_port     = 443
@@ -38,6 +48,7 @@ resource "aws_security_group" "nat_ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "Allow DNS outbound traffic"
   }
+   */
 
   tags = local.tags
 }

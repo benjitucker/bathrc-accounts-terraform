@@ -6,33 +6,25 @@ resource "aws_security_group" "nat_ec2_sg" {
   vpc_id      = local.vpc_id
 
   # Allow inbound SSH (optional)
+  /*
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+   */
 
   # Allow inbound traffic from the private subnet
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = module.vpc.private_subnets_cidr_blocks
-    description = "Allow all traffic from the VPC Private CIDR"
-  }
-
-  # Allow all outbound traffic
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all outbound traffic"
+    description = "Allow HTTPS traffic from the VPC Private CIDR"
   }
 
   # Allow all HTTPS outbound traffic
-  /*
   egress {
     from_port   = 443
     to_port     = 443
@@ -48,7 +40,6 @@ resource "aws_security_group" "nat_ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
     description = "Allow DNS outbound traffic"
   }
-   */
 
   tags = local.tags
 }
@@ -106,6 +97,7 @@ resource "aws_route" "private_nat_route" {
   network_interface_id   = aws_instance.nat_ec2_instance.primary_network_interface_id
 }
 
+/*
 resource "aws_security_group" "private_instance_sg" {
   name   = "private-test-instance-sg"
   vpc_id = local.vpc_id
@@ -141,5 +133,8 @@ resource "aws_instance" "private_instance" {
 
   vpc_security_group_ids = [aws_security_group.private_instance_sg.id]
 
+  source_dest_check           = false # Required to reach IGW
+
   tags = local.tags
 }
+ */

@@ -33,6 +33,11 @@ resource "aws_dynamodb_table" "basic-dynamodb-table" {
     write_capacity = 4
   }
 
+  ttl {
+    attribute_name = "expireAt"
+    enabled        = true
+  }
+
   tags = local.tags
 }
 
@@ -69,6 +74,11 @@ resource "aws_dynamodb_table" "transactions-dynamodb-table" {
     // A GSI consumes units from our free allowance
     read_capacity  = 4
     write_capacity = 4
+  }
+
+  ttl {
+    attribute_name = "expireAt"
+    enabled        = true
   }
 
   tags = local.tags

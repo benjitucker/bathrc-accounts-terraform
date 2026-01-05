@@ -105,3 +105,15 @@ resource "aws_route" "private_nat_route" {
   destination_cidr_block = "0.0.0.0/0"
   network_interface_id   = aws_instance.nat_ec2_instance.primary_network_interface_id
 }
+
+# An instance located on the private subnet, used purely to test routing out to the internet
+resource "aws_instance" "nat_ec2_instance" {
+  instance_type = "t4g.nano" # ARM-based instance for cost optimization
+  ami           = data.aws_ami.latest_amazon_linux.id
+  subnet_id     = local.private_subnet_id
+
+  # For SSH access:
+  key_name = "delme"
+
+  tags = local.tags
+}

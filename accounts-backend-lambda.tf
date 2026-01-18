@@ -13,5 +13,9 @@ module "bathrc-accounts-backend" {
 
   memory_size = 256
 
+  environment_variables = {
+    TEST_MODE = "true" // Enable Test mode where emails only go to test addresses
+  }
+
   tags = local.tags
 }

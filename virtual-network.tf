@@ -20,7 +20,7 @@ data "aws_availability_zones" "available" {}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.6"
 
   name                 = "bathrc-accounts"
   cidr                 = var.vpc_subnet_cidr

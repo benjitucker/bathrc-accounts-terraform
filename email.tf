@@ -20,6 +20,7 @@ output "ses_dkim_tokens" {
   value       = aws_ses_domain_dkim.bathridingclub.dkim_tokens
 }
 
+/* Removed the expensive SES VPC endpoint as the NAT instance is now cheaper.
 # Security group for the VPC endpoint
 resource "aws_security_group" "ses_vpc_endpoint_sg" {
   name        = "ses-vpc-endpoint-sg"
@@ -50,3 +51,4 @@ resource "aws_vpc_endpoint" "ses" {
   security_group_ids  = [aws_security_group.ses_vpc_endpoint_sg.id]
   subnet_ids          = module.vpc.private_subnets
 }
+ */

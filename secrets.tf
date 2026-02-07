@@ -54,6 +54,7 @@ resource "aws_ssm_parameter" "jotform-apikey" {
   tags        = local.tags
 }
 
+/* Removed expensive VPC endpoint and allow Lambda to access SSM directly via NAT instance
 resource "aws_security_group" "ssm_vpc_endpoint_sg" {
   name        = "ssm-vpc-endpoint-sg"
   description = "Allow Lambda to access SSM endpoint"
@@ -82,3 +83,4 @@ resource "aws_vpc_endpoint" "ssm" {
   subnet_ids          = module.vpc.private_subnets
   security_group_ids  = [aws_security_group.ssm_vpc_endpoint_sg.id]
 }
+*/

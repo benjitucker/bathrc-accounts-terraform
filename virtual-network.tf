@@ -29,10 +29,16 @@ module "vpc" {
   public_subnets       = [local.public_cidr]
   enable_dns_hostnames = true
   enable_dns_support   = true
-  enable_nat_gateway   = false // Expensive, so we will use a NAT Instance
-  tags                 = local.tags
+
+  // Expensive, so we will use a NAT Instance
+  enable_nat_gateway         = false
+  single_nat_gateway         = false
+  manage_default_route_table = false
+
+  tags = local.tags
 }
 
+// Manually manage the default route table
 resource "aws_route" "private_nat_gateway" {
   route_table_id         = local.private_route_table_id
   destination_cidr_block = "0.0.0.0/0"

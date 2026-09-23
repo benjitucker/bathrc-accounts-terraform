@@ -85,12 +85,11 @@ EOF
 }
 
 # Use the existing private route tables from the VPC module
-/*resource "aws_route" "private_nat_route" {
+resource "aws_route" "private_nat_route" {
   route_table_id         = local.private_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   network_interface_id   = aws_instance.nat_ec2_instance.primary_network_interface_id
 }
- */
 
 /*
 resource "aws_security_group" "private_instance_sg" {

@@ -64,12 +64,16 @@ resource "aws_instance" "nat_ec2_instance" {
   # Bootstrap script to configure NAT functionality
   user_data = <<-EOF
 #!/bin/bash
+# Wait up to 30 seconds for internet connectivity to settle
+for i in {1..30}; do
+  ping -c 1 8.8.8.8 &> /dev/null && break
+  sleep 1
+done
+
 sudo yum install iptables-services -y
 sudo systemctl enable iptables
 sudo systemctl start iptables
 echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/custom-ip-forwarding.conf
-echo "net.ipv4.conf.all.rp_filter=0" >> /etc/sysctl.d/custom-ip-forwarding.conf
-echo "net.ipv4.conf.default.rp_filter=0" >> /etc/sysctl.d/custom-ip-forwarding.conf
 sudo sysctl -p /etc/sysctl.d/custom-ip-forwarding.conf
 sudo /sbin/iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
 sudo /sbin/iptables -P FORWARD ACCEPT

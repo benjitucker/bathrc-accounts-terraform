@@ -29,5 +29,12 @@ module "vpc" {
   public_subnets       = [local.public_cidr]
   enable_dns_hostnames = true
   enable_dns_support   = true
+  enable_nat_gateway   = false // Expensive, so we will use a NAT Instance
   tags                 = local.tags
+}
+
+resource "aws_route" "private_nat_gateway" {
+  route_table_id         = local.private_route_table_id
+  destination_cidr_block = "0.0.0.0/0"
+  network_interface_id   = aws_instance.nat_ec2_instance.primary_network_interface_id
 }

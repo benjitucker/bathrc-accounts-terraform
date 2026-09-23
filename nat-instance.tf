@@ -59,7 +59,7 @@ resource "aws_instance" "nat_ec2_instance" {
   subnet_id     = local.public_subnet_id
 
   # For SSH access:
-  key_name = "delme"
+  key_name = "delme2"
 
   # Bootstrap script to configure NAT functionality
   user_data = <<-EOF

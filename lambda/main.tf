@@ -1,12 +1,20 @@
 locals {
-  lambda_policy = [
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-    "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
-    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
-    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
-    "arn:aws:iam::aws:policy/AmazonSESFullAccess",
-    aws_iam_policy.ssm_access.arn
-  ]
+  /* The order of this list matters: the policy attachments below are indexed by position.
+   * With the default variables it is exactly the original production list.
+   */
+  lambda_policy = concat(
+    [
+      "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+      "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole",
+      "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+    ],
+    var.dynamodb_full_access ? ["arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"] : [],
+    [
+      "arn:aws:iam::aws:policy/AmazonSESFullAccess",
+      aws_iam_policy.ssm_access.arn
+    ],
+    var.extra_policy_arns
+  )
 
   lambda_policy_count  = length(local.lambda_policy)
   lambda_function_name = var.lambda_name
@@ -14,10 +22,13 @@ locals {
   default_environment = {
     ENV_NAME = var.env_name
   }
+
+  // The GHCR image to deploy. Defaults to an image named after the Lambda.
+  image_name = coalesce(var.image_name, var.lambda_name)
 }
 
 resource "aws_iam_policy" "ssm_access" {
-  name        = "ssm-parameter-access"
+  name        = var.ssm_policy_name
   description = "Allow Lambda to read all SSM parameters"
 
   policy = jsonencode({
@@ -67,7 +78,7 @@ locals {
 }
 
 data "docker_registry_image" "in-ghcr" {
-  name = "${var.ghcr_urn}/${var.lambda_name}:${var.image_tag}"
+  name = "${var.ghcr_urn}/${local.image_name}:${var.image_tag}"
 }
 
 locals {
@@ -76,7 +87,7 @@ locals {
 }
 
 resource "skopeo2_copy" "update-local-ecr" {
-  source_image      = "docker://${var.ghcr_urn}/${var.lambda_name}:${var.image_tag}"
+  source_image      = "docker://${var.ghcr_urn}/${local.image_name}:${var.image_tag}"
   destination_image = "docker://${local.dst_ecr_urn}/${var.lambda_name}:${local.dest_image_tag}"
 
   preserve_digests = true

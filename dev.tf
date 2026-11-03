@@ -16,6 +16,10 @@ locals {
   dev_env_name     = "${var.env_name}-dev"
   dev_table_prefix = "dev-"
   dev_tags         = merge(local.tags, { env_name = local.dev_env_name })
+
+  dev_stripe_secret_key_param     = "dev-stripe-secret-key"
+  dev_stripe_webhook_secret_param = "dev-stripe-webhook-secret"
+  dev_pay_link_secret_param       = "dev-pay-link-secret"
 }
 
 module "bathrc-accounts-backend-dev" {
@@ -47,6 +51,11 @@ module "bathrc-accounts-backend-dev" {
     FORM_TITLE_SUFFIX = " DEV"            // only accept "Training DEV" and "Training Administration DEV"
     PAYMENT_MODE      = "stripe"          // enables the post-submission /redirect endpoint
     TRAINING_FORM_ID  = "263062182377357" // the Training DEV form, for the hourly catch-up and /redirect
+
+    // Names of the SSM parameters holding the Stripe secrets (see below)
+    STRIPE_SECRET_KEY_PARAM     = local.dev_stripe_secret_key_param
+    STRIPE_WEBHOOK_SECRET_PARAM = local.dev_stripe_webhook_secret_param
+    PAY_LINK_SECRET_PARAM       = local.dev_pay_link_secret_param
   }
 
   tags = local.dev_tags
@@ -172,4 +181,43 @@ resource "aws_dynamodb_table" "dev-members" {
 output "dev_jotform_webhook_url" {
   description = "Webhook URL for the Training DEV and Training Administration DEV forms"
   value       = module.bathrc-accounts-backend-dev.function_url
+}
+
+# Stripe secrets for the dev Lambda. The key and webhook secret are only stored once they have
+# been set in the TF cloud variables; until then the parameters don't exist.
+resource "aws_ssm_parameter" "dev_stripe_secret_key" {
+  count       = nonsensitive(var.stripe_dev_secret_key != "") ? 1 : 0
+  name        = local.dev_stripe_secret_key_param
+  description = "Stripe test-mode restricted key for the dev Lambda"
+  type        = "SecureString"
+  value       = var.stripe_dev_secret_key
+  tags        = local.dev_tags
+}
+
+resource "aws_ssm_parameter" "dev_stripe_webhook_secret" {
+  count       = nonsensitive(var.stripe_dev_webhook_secret != "") ? 1 : 0
+  name        = local.dev_stripe_webhook_secret_param
+  description = "Signing secret of the dev Stripe webhook endpoint"
+  type        = "SecureString"
+  value       = var.stripe_dev_webhook_secret
+  tags        = local.dev_tags
+}
+
+# Signs the payment links in emails and pages. Generated here, so nobody needs to handle it.
+resource "random_password" "dev_pay_link_secret" {
+  length  = 48
+  special = false
+}
+
+resource "aws_ssm_parameter" "dev_pay_link_secret" {
+  name        = local.dev_pay_link_secret_param
+  description = "Signs the dev Lambda's payment links"
+  type        = "SecureString"
+  value       = random_password.dev_pay_link_secret.result
+  tags        = local.dev_tags
+}
+
+output "dev_stripe_webhook_url" {
+  description = "Register this as the dev webhook endpoint in the Stripe dashboard (test mode)"
+  value       = "${module.bathrc-accounts-backend-dev.function_url}stripe-webhook"
 }

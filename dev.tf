@@ -44,7 +44,9 @@ module "bathrc-accounts-backend-dev" {
   environment_variables = {
     TEST_MODE         = "true" // all emails go to the test addresses only
     TABLE_NAME_PREFIX = local.dev_table_prefix
-    FORM_TITLE_SUFFIX = " DEV" // only accept "Training DEV" and "Training Administration DEV"
+    FORM_TITLE_SUFFIX = " DEV"            // only accept "Training DEV" and "Training Administration DEV"
+    PAYMENT_MODE      = "stripe"          // enables the post-submission /redirect endpoint
+    TRAINING_FORM_ID  = "263062182377357" // the Training DEV form, for the hourly catch-up and /redirect
   }
 
   tags = local.dev_tags

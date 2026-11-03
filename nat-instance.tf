@@ -70,22 +70,49 @@ for i in {1..30}; do
   sleep 1
 done
 
-sudo yum install iptables-services -y
-sudo systemctl enable iptables
-sudo systemctl start iptables
+# A t4g.nano has only 512 MB of memory, which is not enough for yum to load the
+# Amazon Linux package index (it was killed for lack of memory on 2026-11-03,
+# leaving the NAT without iptables). Add a swap file first.
+dd if=/dev/zero of=/swapfile bs=1M count=1024
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo "/swapfile swap swap defaults 0 0" >> /etc/fstab
+
+# Retry the install in case of a transient failure
+for i in 1 2 3; do
+  yum install -y iptables-services && break
+  sleep 10
+done
+
+systemctl enable iptables
+systemctl start iptables
 echo "net.ipv4.ip_forward=1" > /etc/sysctl.d/custom-ip-forwarding.conf
-sudo sysctl -p /etc/sysctl.d/custom-ip-forwarding.conf
-sudo /sbin/iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
-sudo /sbin/iptables -P FORWARD ACCEPT
-sudo /sbin/iptables -F FORWARD
-sudo service iptables save
+sysctl -p /etc/sysctl.d/custom-ip-forwarding.conf
+
+# Masquerade out of the interface that carries the default route (ens5 on t4g)
+IFACE=$(ip route show default | awk '{print $5; exit}')
+/sbin/iptables -t nat -A POSTROUTING -o "$${IFACE:-ens5}" -j MASQUERADE
+/sbin/iptables -P FORWARD ACCEPT
+/sbin/iptables -F FORWARD
+service iptables save
 EOF
+
+  # User data only runs on first boot, so a change to it must replace the instance
+  user_data_replace_on_change = true
 
   source_dest_check           = false # Required for NAT functionality
   vpc_security_group_ids      = [aws_security_group.nat_ec2_sg.id]
   associate_public_ip_address = true
 
   tags = local.tags
+
+  lifecycle {
+    # Don't replace the NAT instance (and interrupt the Lambda's internet access)
+    # just because Amazon has published a newer AMI. To move to a newer AMI,
+    # replace the instance deliberately: terraform apply -replace=aws_instance.nat_ec2_instance
+    ignore_changes = [ami]
+  }
 }
 
 # Use the existing private route tables from the VPC module

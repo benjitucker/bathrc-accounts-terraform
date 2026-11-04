@@ -58,3 +58,20 @@ variable "training_email_address" {
   type      = string
   sensitive = true
 }
+
+# Stripe (dev environment). Both are optional: while empty, no SSM parameter is created and the
+# dev Lambda reports the missing setting when a payment is attempted. They come from the TF cloud
+# variables, marked sensitive.
+variable "stripe_dev_secret_key" {
+  type        = string
+  sensitive   = true
+  default     = ""
+  description = "Stripe test-mode restricted key (rk_test_...) for the dev Lambda, with Checkout Sessions: Write"
+}
+
+variable "stripe_dev_webhook_secret" {
+  type        = string
+  sensitive   = true
+  default     = ""
+  description = "Signing secret (whsec_...) of the dev Stripe webhook endpoint"
+}

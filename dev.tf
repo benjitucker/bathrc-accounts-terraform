@@ -52,6 +52,7 @@ module "bathrc-accounts-backend-dev" {
     FORM_TITLE_SUFFIX = " DEV"            // only accept "Training DEV" and "Training Administration DEV"
     PAYMENT_MODE      = "stripe"          // enables the post-submission /redirect endpoint
     TRAINING_FORM_ID  = "263062182377357" // the Training DEV form, for the hourly catch-up and /redirect
+    PAYMENT_WINDOW    = "15m"             // short, for testing; production uses the 2 hour default
 
     // Names of the SSM parameters holding the Stripe secrets (see below)
     STRIPE_SECRET_KEY_PARAM     = local.dev_stripe_secret_key_param

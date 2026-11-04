@@ -20,6 +20,7 @@ locals {
   dev_stripe_secret_key_param     = "dev-stripe-secret-key"
   dev_stripe_webhook_secret_param = "dev-stripe-webhook-secret"
   dev_pay_link_secret_param       = "dev-pay-link-secret"
+  dev_public_base_url_param       = "dev-public-base-url"
 }
 
 module "bathrc-accounts-backend-dev" {
@@ -56,6 +57,7 @@ module "bathrc-accounts-backend-dev" {
     STRIPE_SECRET_KEY_PARAM     = local.dev_stripe_secret_key_param
     STRIPE_WEBHOOK_SECRET_PARAM = local.dev_stripe_webhook_secret_param
     PAY_LINK_SECRET_PARAM       = local.dev_pay_link_secret_param
+    PUBLIC_BASE_URL_PARAM       = local.dev_public_base_url_param
   }
 
   tags = local.dev_tags
@@ -214,6 +216,16 @@ resource "aws_ssm_parameter" "dev_pay_link_secret" {
   description = "Signs the dev Lambda's payment links"
   type        = "SecureString"
   value       = random_password.dev_pay_link_secret.result
+  tags        = local.dev_tags
+}
+
+# The dev Lambda's own address, for the payment links in emails. Read at runtime, so there is
+# no dependency cycle between the Lambda and its function URL.
+resource "aws_ssm_parameter" "dev_public_base_url" {
+  name        = local.dev_public_base_url_param
+  description = "The dev Lambda's function URL, for payment links in emails"
+  type        = "String"
+  value       = trimsuffix(module.bathrc-accounts-backend-dev.function_url, "/")
   tags        = local.dev_tags
 }
 
